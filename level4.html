@@ -1,0 +1,259 @@
+﻿<html lang="te">
+<head>
+    <meta charset="UTF-8"></meta>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"></meta>
+    <title>పాఠం -4 అభ్యాసన దీపిక</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ramabhadra&amp;display=swap" rel="stylesheet"></link>
+    <style>
+        body { font-family: 'Ramabhadra', 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 10px; }
+        #lms-container { max-width: 600px; margin: 20px auto; border: 3px solid #2980b9; padding: 25px; border-radius: 20px; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .stage { display: none; text-align: center; }
+        .active { display: block; }
+        .btn-main { background: #2980b9; color: white; padding: 12px 30px; border: none; border-radius: 50px; cursor: pointer; font-size: 18px; margin-top: 15px; font-weight: bold; }
+        .tile-grid { display: flex; justify-content: center; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
+        
+        .tile, .drop-zone { 
+            width: 85px; height: 85px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 32px; border-radius: 12px; 
+            white-space: nowrap; 
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .tile { border: 3px solid #ddd; background: #fff; cursor: pointer; box-shadow: 0 4px 0 #ccc; transition: 0.1s; }
+        .tile:active { transform: translateY(4px); box-shadow: none; }
+        
+        .drop-zone { border: 2px dashed #3498db; margin: 5px; background: #f0f7ff; cursor: pointer; vertical-align: middle; display: inline-flex; }
+        
+        .selected-blank { border: 3px solid #e67e22 !important; background: #fff3e0 !important; }
+        .wrong { background: #f8d7da !important; border-color: #dc3545 !important; }
+        .correct { background: #d4edda !important; border-color: #28a745 !important; }
+        .star-rating { font-size: 55px; margin: 20px 0; }
+        .star-filled { color: #f1c40f; }
+        .star-empty { color: #e0e0e0; }
+        .feedback-box { background: #e8f6ef; padding: 15px; border-radius: 12px; margin: 15px 0; display: none; border: 1px solid #27ae60; }
+        .word-img { width: 220px; height: 180px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #eee; object-fit: contain; background: #fff; }
+        h3 { color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+<div id="lms-container">
+    <h2 style="color: #2c3e50; text-align: center;">పాఠం -4,- "బ, ల, పం, అక్షరాలు" - అభ్యాసన దీపిక</h2>
+    
+    <div class="stage active" id="stage1">
+        <h3>Step 1: Watch the Video</h3>
+        <div id="video-container"></div>
+        <button class="btn-main" onclick="startLearning()">Start Exercise</button>
+    </div>
+
+    <div class="stage" id="stage2">
+        <h3>Step 2: Identify the Letter</h3>
+        <p>Listen carefully and click the letter</p>
+        <div class="tile-grid" id="id-grid"></div>
+        <div class="feedback-box" id="stage2-feedback">
+            <h3 style="color: #27ae60;">Well Done!</h3>
+            <button class="btn-main" onclick="goToStage(3)">Next Stage</button>
+        </div>
+    </div>
+
+    <div class="stage" id="stage3">
+        <h3>Step 3: Build the Word</h3>
+        <p>(Click a box to remove its letter)</p>
+        <div id="image-container"></div>
+        <div id="drop-area"></div>
+        <div class="tile-grid" id="scrambled-letters"></div>
+        <div class="feedback-box" id="stage3-feedback">
+            <h3 style="color: #27ae60;">Excellent Vocabulary!</h3>
+            <button class="btn-main" onclick="goToStage(4)">Final Stage</button>
+        </div>
+    </div>
+
+    <div class="stage" id="stage4">
+        <h3>Step 4: Fill in the Blanks</h3>
+        <div style="display: inline-block; font-size: 28px; line-height: 2.2; text-align: left;">
+            <div>1. బం<span class="drop-zone" id="b1" onclick="selectBlank(1)"></span></div>
+            <div>2. <span class="drop-zone" id="b2" onclick="selectBlank(2)"></span>లపం</div>
+            <div>3. <span class="drop-zone" id="b3" onclick="selectBlank(3)"></span>బల</div>
+            <div>4. <span class="drop-zone" id="b4" onclick="selectBlank(4)"></span>డ</div>
+            <div>5. ఉడ<span class="drop-zone" id="b5" onclick="selectBlank(5)"></span></div>
+        </div>
+        <div class="tile-grid" id="stage4-tiles"></div>
+        <button class="btn-main" id="check-btn" onclick="checkStage4()">Verify Answers</button>
+        <button class="btn-main" id="final-btn" onclick="showFinalScore()" style="background: #27ae60; display: none;">View Report</button>
+    </div>
+
+    <div class="stage" id="finish">
+        <h2 style="color: #2c3e50;">Lesson Completed!</h2>
+        <div class="star-rating" id="star-display"></div>
+        <p id="final-eval-text" style="color: #2980b9; font-size: 22px; font-weight: bold; margin: 20px 0;"></p>
+        <button class="btn-main" onclick="location.reload()">Restart</button>
+    </div>
+</div>
+
+<script>
+    // Using Unicode escape sequences to prevent '&#3074;' or broken text issues.
+    // \u0C02 is Sunna (ం)
+    const CONFIG = {
+        videoID: "odBwuLKZMj0",
+        stage2Letters: ['\u0C2A', '\u0C09', '\u0C35', '\u0C24', '\u0C2C', '\u0C21', '\u0C15'], // ప, ఉ, వ, త, బ, డ, క
+        stage4Letters: ['\u0C21', '\u0C24', '\u0C2C', '\u0C09', '\u0C15\u0C02'], // డ, త, బ, ఉ, క
+        stage4Answers: { b1:'\u0C21', b2:'\u0C2C', b3:'\u0C24', b4:'\u0C15\u0C02', b5:'\u0C24' }
+    };
+
+    const wordData = [
+        {w: '\u0C2C\u0C32\u0C2A\u0C02', l: ['\u0C2C', '\u0C32', '\u0C2A\u0C02'], img: 'https://blogger.googleusercontent.com/img/a/AVvXsEicnKs5Fb8YzTFPhVGqeND21PYcBI4GSypazhV0mNuKSeZbACH0nJx6S6MBIBGP0c6zKUngLys_L-DdFSlqkuchi9X1Qh70fMg6hw9LzCmhz6ryboDUsGwruEFvOmaQfHg9wvtKqIZiy0chs_Q49uR6WlEnAxVlGo1ckgoPAAkz7eqO4HoggW98jYAUohVc'}, // బలపం
+        {w: '\u0C15\u0C02\u0C21', l: ['\u0C15\u0C02', '\u0C21'], img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhA9y7SdaILjgzxYDmcKcT2SALDg_OY8pOdHEe2tSyTXZpZrWuYwCWc2tUBdxJZRW_2PH34HqSKRtLl95Oi0olHXBbRk4ZtksxN7gX7mbhTLgATNey969tNesj4FGUlgOqi9LPI94RG0TjqBbw7B2g8xcsgT6T2sdRef6d736__waXv5mGj2jsU0_u6Vzx9'}, // కండ
+        {w: '\u0C24\u0C2C\u0C32',  l: ['\u0C24', '\u0C2C', '\u0C32'], img: 'https://blogger.googleusercontent.com/img/a/AVvXsEjxNxDl759gROCUthAMWScxAuI0jNWHmjRyUvI4IsGYNg4y6yMYVbAL9Zt7IWMrcIR6eqHBZNLQNGnc_1JDY4OKUKaU_ok_TY-X9ZT9OSbx2xmj6ksHiCBh97YgR121zfbCv45wJJslMqVdnNtl250wM2QU6am3FJVm5o6pg6VQUxZKu3XBHYfSbXHPV5L5'}, // తబల
+        {w: '\u0C2C\u0C02\u0C21',  l: ['\u0C2C\u0C02', '\u0C21'], img: 'https://blogger.googleusercontent.com/img/a/AVvXsEjkQ6XIujOLUSzeb566oUA8jAuYd-CsWRaqDupOJ5kRjKjeRZ3SyvjOaKoap0fnFr6m-2Kr-WVkcO1NBEFlmQv1jX3RQiNDa9md2DSFYQSqDLkmHf3PoLTIxBdr0xtcWaxfcOQNIFEb8wwrtfSKYOr_rWjg-KpkB5V2OY_1Vz6dSxDb91GR7c6H-TB6QJZ2'}, // బండ
+        {w: '\u0C09\u0C21\u0C24', l: ['\u0C09', '\u0C21', '\u0C24'], img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhjn2g1uejr5zRC8JDzH5LxCv8e8nAlWPjzAGQLBKygu1Gekc5yZg3OtS90dXci__C8gGuA1a1gna7jPpqfupkxT2J-UzgcWm0je6VinugVfeA3OG4QG5lKQgdxbwVGY6HzNwM_EoeYUGx3MyIZR0kyczJixgzW0EM_1roC-FBEPLRHrLtTvzUuYrIiyi1w'}, // ఉడత
+        {w: '\u0C09\u0C32\u0C35', l: ['\u0C09', '\u0C32', '\u0C35'], img: 'https://blogger.googleusercontent.com/img/a/AVvXsEj6egxETgksLCyCJlIkr-YyCnk5ygVbJXd6an2RYiN9-2ipFBpf2KzhDmN4_H5r49botgGY8tfp1KAjnWj-qE8oJsvdXNZEugu5wlIUMDjUpEv7BAPdqVKJP3QLp80z8CQc7gkp7cvfedGNMVETXVP9V_oH2qeTbKVw9F2Lddi25gMIGgNoipe3CSJuqZXG'}  // ఉలవ
+    ];
+
+    let totalAttempts = 0;
+    let activeBlank = null;
+    let qIdx = 0;
+    let wordIdx = 0;
+    const targetSet = [...CONFIG.stage2Letters, ...CONFIG.stage2Letters].sort(() => Math.random() - 0.5).slice(0, 6);
+
+    window.onload = () => {
+        const vidContainer = document.getElementById('video-container');
+        if(vidContainer) {
+            vidContainer.innerHTML = `<iframe id="lesson-video" width="100%" height="315" src="https://www.youtube.com/embed/${CONFIG.videoID}" frameborder="0" allowfullscreen></iframe>`;
+        }
+        const s4grid = document.getElementById('stage4-tiles');
+        CONFIG.stage4Letters.forEach(l => {
+            const t = document.createElement('div');
+            t.className = 'tile'; t.innerText = l;
+            t.onclick = () => fillSelected(l);
+            s4grid.appendChild(t);
+        });
+    };
+
+    function speak(txt) {
+        window.speechSynthesis.cancel();
+        setTimeout(() => {
+            const u = new SpeechSynthesisUtterance(txt);
+            u.lang = 'te-IN'; u.rate = 0.6; 
+            window.speechSynthesis.speak(u);
+        }, 50);
+    }
+
+    function startLearning() {
+        document.getElementById('video-container').innerHTML = ""; 
+        goToStage(2);
+    }
+
+    function goToStage(n) {
+        document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+        document.getElementById('stage' + n).classList.add('active');
+        if(n === 2) loadId();
+        if(n === 3) loadScramble();
+    }
+
+    function loadId() {
+        if(qIdx >= targetSet.length) {
+            document.getElementById('id-grid').innerHTML = '';
+            document.getElementById('stage2-feedback').style.display = 'block';
+            return;
+        }
+        const target = targetSet[qIdx];
+        speak(target);
+        const grid = document.getElementById('id-grid');
+        grid.innerHTML = '';
+        [...CONFIG.stage2Letters].sort(() => Math.random() - 0.5).forEach(l => {
+            const t = document.createElement('div');
+            t.className = 'tile'; t.innerText = l;
+            t.onclick = () => {
+                totalAttempts++;
+                if(l === target) { qIdx++; setTimeout(loadId, 500); }
+                else { speak(target); }
+            };
+            grid.appendChild(t);
+        });
+    }
+
+    function loadScramble() {
+        if(wordIdx >= wordData.length) {
+            document.getElementById('image-container').innerHTML = "";
+            document.getElementById('drop-area').innerHTML = "";
+            document.getElementById('scrambled-letters').innerHTML = "";
+            document.getElementById('stage3-feedback').style.display = 'block';
+            return;
+        }
+        const d = wordData[wordIdx];
+        document.getElementById('image-container').innerHTML = `<img src="${d.img}" class="word-img" alt="Word Image">`;
+        
+        const area = document.getElementById('drop-area'); 
+        area.innerHTML = '';
+        d.l.forEach(() => {
+            const z = document.createElement('div');
+            z.className = 'drop-zone';
+            z.onclick = function() { this.innerText = ""; };
+            area.appendChild(z);
+        });
+
+        const grid = document.getElementById('scrambled-letters'); 
+        grid.innerHTML = '';
+        [...d.l].sort(() => Math.random() - 0.5).forEach(l => {
+            const t = document.createElement('div');
+            t.className = 'tile'; 
+            t.innerText = l;
+            t.onclick = () => {
+                totalAttempts++;
+                const zones = document.querySelectorAll('#drop-area .drop-zone');
+                for(let z of zones) { if(!z.innerText) { z.innerText = l; break; } }
+                
+                let current = "";
+                document.querySelectorAll('#drop-area .drop-zone').forEach(z => current += z.innerText);
+                if(current === d.w) { wordIdx++; setTimeout(loadScramble, 800); }
+            };
+            grid.appendChild(t);
+        });
+    }
+
+    function selectBlank(n) {
+        activeBlank = n;
+        document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('selected-blank'));
+        document.getElementById('b'+n).classList.add('selected-blank');
+    }
+
+    function fillSelected(l) {
+        if(activeBlank) {
+            totalAttempts++;
+            document.getElementById('b'+activeBlank).innerText = l;
+            document.getElementById('b'+activeBlank).classList.remove('wrong');
+        }
+    }
+
+    function checkStage4() {
+        let allCorrect = true;
+        for(let k in CONFIG.stage4Answers) {
+            const el = document.getElementById(k);
+            if(el.innerText === CONFIG.stage4Answers[k]) el.className = 'drop-zone correct';
+            else { el.className = 'drop-zone wrong'; allCorrect = false; }
+        }
+        if(allCorrect) {
+            document.getElementById('check-btn').style.display = 'none';
+            document.getElementById('final-btn').style.display = 'inline-block';
+        }
+    }
+
+    function showFinalScore() {
+        document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+        document.getElementById('finish').classList.add('active');
+        let rating = 1; let msg = "";
+        if(totalAttempts <= 35) { rating = 5; msg = "Perfect Mastery!"; }
+        else if(totalAttempts <= 45) { rating = 4; msg = "Great Job!"; }
+        else { rating = 3; msg = "Keep Practicing!"; }
+        let stars = "";
+        for(let i=1; i<=5; i++) {
+            stars += (i <= rating) ? '<span class="star-filled">\u2605</span>' : '<span class="star-empty">\u2606</span>';
+        }
+        document.getElementById('star-display').innerHTML = stars;
+        document.getElementById('final-eval-text').innerText = msg;
+    }
+</script>
+</body>
+</html>
