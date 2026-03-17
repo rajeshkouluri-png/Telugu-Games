@@ -235,6 +235,7 @@
         }
         document.getElementById('star-display').innerHTML = stars;
         document.getElementById('final-eval-text').innerText = msg;
+        window.top.postMessage({ type: "autoSaveScore", stars: rating }, "*");
     }
 </script>
 </body>
