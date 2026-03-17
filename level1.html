@@ -217,17 +217,22 @@
     }
 
     function showFinalScore() {
-        document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
-        document.getElementById('finish').classList.add('active');
-        let rating = 1; let msg = "";
-        if(totalAttempts <= 35) { rating = 5; msg = "Perfect Mastery! You are a Telugu expert."; }
-        else if(totalAttempts <= 45) { rating = 4; msg = "Great Job! You have a strong grasp of these words."; }
-        else if(totalAttempts <= 60) { rating = 3; msg = "Good effort! Keep practicing to improve."; }
-        else { rating = 2; msg = "Nice try! Watch the video again to learn better."; }
-        let stars = "";
-        for(let i=1; i<=5; i++) {
-            stars += (i <= rating) ? '<span class="star-filled">★</span>' : '<span class="star-empty">☆</span>';
-        }
+    document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+    document.getElementById('finish').classList.add('active');
+    
+    // Calculate the stars
+    let rating = (totalAttempts <= 30) ? 5 : (totalAttempts <= 35) ? 4 : (totalAttempts <= 40) ? 3 : (totalAttempts <= 45) ? 2 : 1;
+    let msgs = ["", "Try Again!", "Keep Practicing!", "Good Effort!", "Great Job!", "Perfect Mastery!"];
+    let stars = "";
+    for (let i = 1; i <= 5; i++) stars += (i <= rating) ? '<span class="star-filled">\u2605</span>' : '<span class="star-empty">\u2606</span>';
+    
+    // Display the feedback to the student
+    document.getElementById('star-display').innerHTML = stars;
+    document.getElementById('final-eval-text').innerText = msgs[rating];
+
+    // AUTOMATION: Beam the calculated rating silently to the main blog!
+    window.parent.postMessage({ type: "autoSaveScore", stars: rating }, "*");
+}
         document.getElementById('star-display').innerHTML = stars;
         document.getElementById('final-eval-text').innerText = msg;
     }
