@@ -230,8 +230,8 @@
         document.getElementById('star-display').innerHTML = stars;
         document.getElementById('final-eval-text').innerText = msgs[rating];
 
-        // AUTOMATION: Beam the calculated rating silently to the main blog!
-        window.parent.postMessage({ type: "autoSaveScore", stars: rating }, "*");
+       // Changed window.parent to window.top
+window.top.postMessage({ type: "autoSaveScore", stars: rating }, "*");
     }
 </script>
 </body>
