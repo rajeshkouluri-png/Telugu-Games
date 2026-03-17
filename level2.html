@@ -221,22 +221,28 @@
         }
     }
 
-    function showFinalScore() {
-        document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
-        document.getElementById('finish').classList.add('active');
-        let rating = 1; let msg = "";
-        if(totalAttempts <= 35) { rating = 5; msg = "Perfect Mastery! You are a Telugu expert."; }
-        else if(totalAttempts <= 45) { rating = 4; msg = "Great Job! You have a strong grasp of these words."; }
-        else if(totalAttempts <= 60) { rating = 3; msg = "Good effort! Keep practicing to improve."; }
-        else { rating = 2; msg = "Nice try! Watch the video again to learn better."; }
-        let stars = "";
-        for(let i=1; i<=5; i++) {
-            stars += (i <= rating) ? '<span class="star-filled">★</span>' : '<span class="star-empty">☆</span>';
-        }
-        document.getElementById('star-display').innerHTML = stars;
-        document.getElementById('final-eval-text').innerText = msg;
-        window.top.postMessage({ type: "autoSaveScore", stars: rating }, "*");
+   function showFinalScore() {
+    document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+    document.getElementById('finish').classList.add('active');
+    
+    let rating = 1; let msg = "";
+    if(totalAttempts <= 35) { rating = 5; msg = "Perfect Mastery! You are a Telugu expert."; }
+    else if(totalAttempts <= 45) { rating = 4; msg = "Great Job! You have a strong grasp of these words."; }
+    else if(totalAttempts <= 60) { rating = 3; msg = "Good effort! Keep practicing to improve."; }
+    else { rating = 2; msg = "Nice try! Watch the video again to learn better."; }
+    
+    let stars = "";
+    for(let i=1; i<=5; i++) {
+        stars += (i <= rating) ? '<span class="star-filled">★</span>' : '<span class="star-empty">☆</span>';
     }
+    
+    // Displays the stars and message on the screen
+    document.getElementById('star-display').innerHTML = stars;
+    document.getElementById('final-eval-text').innerText = msg;
+
+    // AUTOMATION: Beams the calculated rating silently to the main blog!
+    window.top.postMessage({ type: "autoSaveScore", stars: rating }, "*");
+}
 </script>
 </body>
 </html>
