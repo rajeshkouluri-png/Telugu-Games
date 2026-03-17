@@ -68,7 +68,7 @@
         </div>
         <div class="tile-grid" id="stage4-tiles"></div>
         <button class="btn-main" id="check-btn" onclick="checkStage4()">Verify Answers</button>
-        <button class="btn-main" id="final-btn" onclick="showFinalScore()" style="background: #27ae60; display: none;">View Report</button>
+        <button class="btn-main" id="final-btn" onclick="showFinalScore(); window.parent.postMessage('showScoreBar', '*');" style="background: #27ae60; display: none;">View Report</button>
     </div>
 
     <div class="stage" id="finish">
