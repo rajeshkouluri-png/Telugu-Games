@@ -1,0 +1,415 @@
+﻿<p>&nbsp;</p><br /><p></p>
+
+<html lang="te">
+<head>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["SoftwareApplication", "LearningResource"],
+      "name": "Learn Telugu Online: Interactive Alphabet Game",
+      "operatingSystem": "Any",
+      "applicationCategory": "EducationalGame",
+      "url": "https://www.rajclassroom.com/learn-telugu-dirgham-words-interactive-game",
+      "image": "https://www.rajclassroom.com/path-to-your-game-thumbnail.jpg",
+      "description": "Master the Telugu language with this interactive online learning game. Perfect for beginners and language enthusiasts worldwide to practice Telugu alphabet, vocabulary, and pronunciation.",
+      "educationalLevel": "Beginner",
+      "inLanguage": "te",
+      "keywords": "learn telugu online, telugu alphabet game, telugu language course, interactive telugu lessons, beginners telugu vocabulary",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "128"
+      }
+    }
+    </script>
+    <meta charset="UTF-8"></meta>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"></meta>
+    <meta content="Learn Telugu online with our free interactive educational game. Master Telugu alphabet, vocabulary, and pronunciation through fun drag-and-drop puzzles. Perfect for beginners worldwide." name="description"></meta>
+    <meta content="learn telugu online, telugu alphabet game, telugu language learning, interactive telugu lessons, beginner telugu course, telugu vocabulary practice, read and write telugu" name="keywords"></meta>
+    
+    <title>Learn Telugu Online - Interactive Alphabet & Vocabulary Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ramabhadra&amp;display=swap" rel="stylesheet"></link>
+    
+    <script src="https://www.youtube.com/iframe_api"></script>
+    
+    <style>
+        body { font-family: 'Ramabhadra', 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 10px; }
+        #lms-container { max-width: 600px; margin: 20px auto; border: 3px solid #2980b9; padding: 25px; border-radius: 20px; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .stage { display: none; text-align: center; }
+        .active { display: block; }
+        .btn-main { background: #2980b9; color: white; padding: 12px 30px; border: none; border-radius: 50px; cursor: pointer; font-size: 18px; margin-top: 15px; font-weight: bold; }
+        .tile-grid { display: flex; justify-content: center; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
+        
+        .tile, .drop-zone { 
+            width: 85px; height: 85px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 32px; border-radius: 12px; 
+            white-space: nowrap; 
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .tile { border: 3px solid #ddd; background: #fff; cursor: pointer; box-shadow: 0 4px 0 #ccc; transition: 0.1s; }
+        .tile:active { transform: translateY(4px); box-shadow: none; }
+        
+        .drop-zone { border: 2px dashed #3498db; margin: 5px; background: #f0f7ff; cursor: pointer; vertical-align: middle; display: inline-flex; }
+        
+        .selected-blank { border: 3px solid #e67e22 !important; background: #fff3e0 !important; }
+        .wrong { background: #f8d7da !important; border-color: #dc3545 !important; }
+        .correct { background: #d4edda !important; border-color: #28a745 !important; }
+        .star-rating { font-size: 55px; margin: 20px 0; }
+        .star-filled { color: #f1c40f; }
+        .star-empty { color: #e0e0e0; }
+        .feedback-box { background: #e8f6ef; padding: 15px; border-radius: 12px; margin: 15px 0; display: none; border: 1px solid #27ae60; }
+        .word-img { width: 220px; height: 180px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #eee; object-fit: contain; background: #fff; }
+        h3 { color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+<div id="lms-container">
+    <h2 style="color: #2c3e50; text-align: center;">తెలుగు పాఠం: "పూచినపూలు"- అభ్యసన దీపిక</h2>
+    
+    <div class="stage active" id="stage1">
+        <h3>Step 1: Watch the Video Lesson</h3>
+        <div id="video-container">
+            <div id="youtube-player"></div> 
+        </div>
+        <button class="btn-main" onclick="startLearning()">Start Exercise</button>
+    </div>
+
+    <div class="stage" id="stage2">
+        <h3>Step 2: Identify the Letter</h3>
+        <p>Listen carefully and click the letter</p>
+        <div class="tile-grid" id="id-grid"></div>
+        <div class="feedback-box" id="stage2-feedback">
+            <h3 style="color: #27ae60;">Well Done!</h3>
+            <button class="btn-main" onclick="goToStage(3)">Next Stage</button>
+        </div>
+    </div>
+
+    <div class="stage" id="stage3">
+        <h3>Step 3: Build the Word</h3>
+        <p>(Click a box to remove its letter)</p>
+        <div id="image-container"></div>
+        <div id="drop-area"></div>
+        <div class="tile-grid" id="scrambled-letters"></div>
+        <div class="feedback-box" id="stage3-feedback">
+            <h3 style="color: #27ae60;">Excellent Vocabulary!</h3>
+            <button class="btn-main" onclick="goToStage(4)">Final Stage</button>
+        </div>
+    </div>
+
+<div class="stage" id="stage4">
+        <h3>Step 4: Fill in the Blanks</h3>
+        <div style="display: grid; font-size: 28px; gap: 10px; grid-template-columns: repeat(2, 1fr); line-height: 2.2; max-width: 100%; text-align: left;">
+            <div>1. <span class="drop-zone" id="b1" onclick="selectBlank(1)"></span>పాకి</div>
+            <div>2. <span class="drop-zone" id="b2" onclick="selectBlank(2)"></span>లు</div>
+            <div>3. <span class="drop-zone" id="b3" onclick="selectBlank(3)"></span>లక</div>
+            <div>4. <span class="drop-zone" id="b4" onclick="selectBlank(4)"></span>నీగ</div>
+            <div>5. ను<span class="drop-zone" id="b5" onclick="selectBlank(5)"></span>గు</div>
+            <div>6. పూ<span class="drop-zone" id="b6" onclick="selectBlank(6)"></span></div>
+            <div>7. <span class="drop-zone" id="b7" onclick="selectBlank(7)"></span>డు</div>
+            <div>8. <span class="drop-zone" id="b8" onclick="selectBlank(8)"></span>రకాయ</div>
+        </div>
+        <div class="tile-grid" id="stage4-tiles"></div>
+        <button class="btn-main" id="check-btn" onclick="checkStage4()">Verify Answers</button>
+        <button class="btn-main" id="final-btn" onclick="showFinalScore()" style="background: #27ae60; display: none;">View Report</button>
+    </div>
+
+    <div class="stage" id="finish">
+        <h2 style="color: #2c3e50;">Lesson Completed!</h2>
+        <div class="star-rating" id="star-display"></div>
+        <p id="final-eval-text" style="color: #2980b9; font-size: 22px; font-weight: bold; margin: 20px 0;"></p>
+        <button class="btn-main" onclick="location.reload()">Restart Game</button>
+    </div>
+</div>
+
+<script>
+const CONFIG = {
+    // Array of the 2 YouTube Video IDs
+    videoIDs: [
+        "rzosYfyzK6k",
+        "87VAljQ3w7U"
+    ], 
+    
+    // Stage 2 letters: చు, డు, వి, సీ, పూ, భూ, శు, మూ
+    stage2Letters: [
+        '\u0C1A\u0C41', // చు
+        '\u0C21\u0C41', // డు
+        '\u0C35\u0C3F', // వి
+        '\u0C38\u0C40', // సీ
+        '\u0C2A\u0C42', // పూ
+        '\u0C2D\u0C42', // భూ
+        '\u0C36\u0C41', // శు
+        '\u0C2E\u0C42'  // మూ
+    ], 
+
+    // Stage 4 letters: జూ, తు, తూ, చి, రు, లు, బీ, గూ
+    stage4Letters: [
+        '\u0C1C\u0C42', // జూ
+        '\u0C24\u0C41', // తు
+        '\u0C24\u0C42', // తూ
+        '\u0C1A\u0C3F', // చి
+        '\u0C30\u0C41', // రు
+        '\u0C32\u0C41', // లు
+        '\u0C2C\u0C40', // బీ
+        '\u0C17\u0C42'  // గూ
+    ], 
+
+    // Stage 4 answers: తు, జూ, చి, తూ, లు, రు, గూ, బీ
+    stage4Answers: { 
+        b1: '\u0C24\u0C41', // తు
+        b2: '\u0C1C\u0C42', // జూ
+        b3: '\u0C1A\u0C3F', // చి
+        b4: '\u0C24\u0C42', // తూ
+        b5: '\u0C32\u0C41', // లు
+        b6: '\u0C30\u0C41', // రు
+        b7: '\u0C17\u0C42', // గూ
+        b8: '\u0C2C\u0C40'  // బీ
+    }
+};
+
+const wordData = [
+    {
+        // తుపాకీ (Tu-pa-kee) - Gun
+        w: '\u0C24\u0C41\u0C2A\u0C3E\u0C15\u0C40', 
+        l: ['\u0C24\u0C41', '\u0C2A\u0C3E', '\u0C15\u0C40'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhw8FNjmeLMPBt_zQ94k3g8kee45uQzJnWkOVKkZxBJV0GlrOtuYhKLaMs81arxim4DnAD3tfk7TXw1HE27-osxnyzjCxi9cGHbb5Exk_xiTiuiDeyKMnjeRRb47AQ_q9HcOBOExHy81QEi3Z8Z8A22olRYETzyb0nRsF5t8bhNy1Gy-EP955PsoUqKyFDk' // Placeholder
+    },
+    {
+        // పూలు (Poo-lu) - Flowers
+        w: '\u0C2A\u0C42\u0C32\u0C41', 
+        l: ['\u0C2A\u0C42', '\u0C32\u0C41'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEgyfr7Nh64aFrS5n53idYDZ8uttpEieteKq1Nwmp2zJgeO2uLFk3bhQ5x5jnqGaNt-X3Xy2qiehq7FwO_U3Ycr1krrnHEh9-336HAMY4ipDcBGc8RtUwC1zgf57yT-Tuc7PMsLtddUjDCSJe7CNbrdWnksIBgG1Z8dJ_NznxWsCuRwx1j8T8tDIugsGQxky' // Placeholder
+    },
+    {
+        // జూలు (Joo-lu) - Mane / Hair
+        w: '\u0C1C\u0C42\u0C32\u0C41', 
+        l: ['\u0C1C\u0C42', '\u0C32\u0C41'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEg59bYkWstUPLXvfAS6pLh4_0XuOqZ8RyueWstM6n9tVQ8FaIx8fTK06MlvjIDrwrzTDSvUEAyJcO1O2YZtrmT11bHDOJg33ldUxgx5rA9XcRMtoyK1Qe0rX69V0FknN_VNQvHu-2JwhbMrPaCIErFV0uk21VcZGPUL-IYZ6E2OLilugYY_nGAp1KtdrItq' // Placeholder
+    },
+    {
+        // చిలక (Chi-la-ka) - Parrot (Original Image Kept)
+        w: '\u0C1A\u0C3F\u0C32\u0C15', 
+        l: ['\u0C1A\u0C3F', '\u0C32', '\u0C15'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEgKynAKTt12Qz8tQsTEVOnP9-SE2SVt-PBd3Rsc7Mc1gy9i4tBedrNDFElz2c2rgg7iafwgKuLcYMESBmz_-XdZ8QrfWdrsshrUtAVSiiNPhy8XZuTa_mWx7GzLhCYZXqsnDprtGdVZ79V82eSPviEZCxxV-jRPTuOZ5EnpByUXGel2d8TiuZb94Uy221kF' 
+    },
+    {
+        // తూనీగా (Too-nee-ga) - Dragonfly
+        w: '\u0C24\u0C42\u0C28\u0C40\u0C17\u0C3E', 
+        l: ['\u0C24\u0C42', '\u0C28\u0C40', '\u0C17\u0C3E'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhcf1RWSwrxqkfwQcALxwB6MAdBBR3VCQhLVnvgOLmM5lpodxNjYKcvWjJ3xgroMnq-NP-iKmiZFd641CBr5ARXXDP4ykT1w2byornuetxFWgQAsV_AfyNKH5GYRJoi6ixjWc7snWhSR8fcOpjhkwH18JP6Wplx0AJVvWcDBMWOF-2Vsxfridabi2d7fJqQ' // Placeholder
+    },
+    {
+        // నురుగు (Nu-ru-gu) - Foam / Froth
+        w: '\u0C28\u0C41\u0C30\u0C41\u0C17\u0C41', 
+        l: ['\u0C28\u0C41', '\u0C30\u0C41', '\u0C17\u0C41'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhZQCvnjJF1TEsN06I2xk-t6UaCUkDdJ6RI2FgG9yhoqWvsYGK6acLdi8nspFTRbD9XDIuQkshPfzYxPZoooj9HDGX6_nclol9OYJaxvKQDjkNPg2dvaP1UrrQhFJF2TZrMKfifDJeosCpFPnuj-5niEzFAj33xXUAPH-3zsW7DgbeClUD_UMhKieez1Kv8' // Placeholder
+    },
+    {
+        // బీరకాయ (Bee-ra-ka-ya) - Ridge Gourd (Original Image Kept)
+        w: '\u0C2C\u0C40\u0C30\u0C15\u0C3E\u0C2F', 
+        l: ['\u0C2C\u0C40', '\u0C30', '\u0C15\u0C3E', '\u0C2F'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEh8PUlFmH9NavggNoO6VBtVeGebLh6tR_HM8XSX8z_MUxMMS1fMMcBxjVLFszkgW-i2SsmVvOpDVo9aGKYnDf-7EnysAv1OshTSeO2YiS4tP2fTv_yteTnrq2oH1mm9_J3xkGwrP9dZOihf1tl7ORaWMOld78or3eARHDW6_5FRf1lienBNf7Ol7bzROG8r' 
+    },
+    {
+        // గూడు (Goo-du) - Nest
+        w: '\u0C17\u0C42\u0C21\u0C41', 
+        l: ['\u0C17\u0C42', '\u0C21\u0C41'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhKowZ6a4w1WiBuQjM3jho90PCewB2TFAykTcu5oeAakhXpzpwOahsYwY4Z07lCwOZLd5CBOq0lH-ztFCNUGVm0npGNgJE24F-B9j84opnz912G9s5x4BaVVtwzcwtBlbZETmVTxDUcxDaOVrbQyAfoaQhWyRyVuRGG14q9i7CRMHBEfWstRdmxtNEYEnuh' // Placeholder
+    }
+];
+let totalAttempts = 0;
+let activeBlank = 1; // Default starting blank
+let qIdx = 0;
+let wordIdx = 0;
+const targetSet = [...CONFIG.stage2Letters].sort(() => Math.random() - 0.5);
+
+// --- YOUTUBE VIDEO PLAYER LOGIC ---
+let currentVideoIndex = 0;
+let player;
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('youtube-player', {
+        height: '315',
+        width: '100%',
+        videoId: CONFIG.videoIDs[currentVideoIndex],
+        playerVars: {
+            'rel': 0,
+            'showinfo': 0
+        },
+        events: {
+            'onStateChange': onPlayerStateChange
+        }
+    });
+}
+
+function onPlayerStateChange(event) {
+    // When a video finishes playing (YT.PlayerState.ENDED is 0)
+    if (event.data === 0) {
+        currentVideoIndex++;
+        
+        // If there are more videos, load and play the next one
+        if (currentVideoIndex < CONFIG.videoIDs.length) {
+            player.loadVideoById(CONFIG.videoIDs[currentVideoIndex]);
+        }
+    }
+}
+// ----------------------------------
+
+function speak(txt) {
+    if (!txt) return; 
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(txt);
+    u.lang = 'te-IN';
+    u.rate = 0.8; 
+    window.speechSynthesis.speak(u);
+}
+
+function startLearning() {
+    window.speechSynthesis.resume();
+    // Stop the video if it's still playing when they click start
+    if (player && player.stopVideo) {
+        player.stopVideo();
+    }
+    goToStage(2);
+}
+
+function goToStage(n) {
+    document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+    document.getElementById('stage' + n).classList.add('active');
+    if(n === 2) loadId();
+    if(n === 3) loadScramble();
+    if(n === 4) selectBlank(1); // Auto-focus box 1 when entering final stage
+}
+
+function loadId() {
+    const grid = document.getElementById('id-grid');
+    const feedbackBox = document.getElementById('stage2-feedback');
+    if(qIdx >= targetSet.length) {
+        grid.innerHTML = '';
+        feedbackBox.style.display = 'block';
+        return;
+    }
+    const target = targetSet[qIdx];
+    setTimeout(() => speak(target), 500);
+    grid.innerHTML = '';
+    [...CONFIG.stage2Letters].sort(() => Math.random() - 0.5).forEach(letter => {
+        const t = document.createElement('div');
+        t.className = 'tile'; t.innerText = letter;
+        t.onclick = () => {
+            totalAttempts++;
+            if(letter === target) { 
+                t.style.background = "#d4edda";
+                qIdx++; 
+                setTimeout(loadId, 800); 
+            } else { 
+                t.classList.add('wrong');
+                speak(target);
+                setTimeout(() => t.classList.remove('wrong'), 500);
+            }
+        };
+        grid.appendChild(t);
+    });
+}
+
+function loadScramble() {
+    if(wordIdx >= wordData.length) {
+        document.getElementById('stage3-feedback').style.display = 'block';
+        return;
+    }
+    const d = wordData[wordIdx];
+    document.getElementById('image-container').innerHTML = `<img src="${d.img}" class="word-img" alt="Word Image">`;
+    const area = document.getElementById('drop-area'); area.innerHTML = '';
+    d.l.forEach(() => {
+        const z = document.createElement('div');
+        z.className = 'drop-zone';
+        z.onclick = function() { this.innerText = ""; };
+        area.appendChild(z);
+    });
+    const grid = document.getElementById('scrambled-letters'); grid.innerHTML = '';
+    [...d.l].sort(() => Math.random() - 0.5).forEach(l => {
+        const t = document.createElement('div');
+        t.className = 'tile'; t.innerText = l;
+        t.onclick = () => {
+            totalAttempts++;
+            const zones = document.querySelectorAll('#drop-area .drop-zone');
+            for(let z of zones) { if(!z.innerText) { z.innerText = l; break; } }
+            let current = Array.from(document.querySelectorAll('#drop-area .drop-zone')).map(z => z.innerText).join('');
+            if(current === d.w) { wordIdx++; setTimeout(loadScramble, 800); }
+        };
+        grid.appendChild(t);
+    });
+}
+
+function selectBlank(n) {
+    activeBlank = n;
+    document.querySelectorAll('#stage4 .drop-zone').forEach(z => z.classList.remove('selected-blank'));
+    const target = document.getElementById('b'+n);
+    if(target) target.classList.add('selected-blank');
+}
+
+function fillSelected(l) {
+    if(activeBlank) {
+        totalAttempts++;
+        const currentBox = document.getElementById('b' + activeBlank);
+        currentBox.innerText = l;
+        currentBox.classList.remove('wrong', 'selected-blank');
+
+        // FIXED logic using parseInt to handle up to 8 boxes correctly
+        let nextBlank = parseInt(activeBlank) + 1; 
+        while (nextBlank <= 8) {
+            const nextEl = document.getElementById('b' + nextBlank);
+            if (nextEl && !nextEl.innerText) {
+                selectBlank(nextBlank);
+                return; // Replaced 'break' with 'return' to halt loop
+            }
+            nextBlank++;
+        }
+        if (nextBlank > 8) activeBlank = null;
+    }
+}
+
+function checkStage4() {
+    let allCorrect = true;
+    for(let k in CONFIG.stage4Answers) {
+        const el = document.getElementById(k);
+        if(el.innerText === CONFIG.stage4Answers[k]) el.className = 'drop-zone correct';
+        else { el.className = 'drop-zone wrong'; allCorrect = false; }
+    }
+    if(allCorrect) {
+        document.getElementById('check-btn').style.display = 'none';
+        document.getElementById('final-btn').style.display = 'inline-block';
+    }
+}
+
+function showFinalScore() {
+    document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+    document.getElementById('finish').classList.add('active');
+    let rating = (totalAttempts <= 45) ? 5 : (totalAttempts <= 50) ? 4 : (totalAttempts <= 60) ? 3 : (totalAttempts <= 65) ? 2 : 1;
+    let msgs = ["", "Try Again!", "Keep Practicing!", "Good Effort!", "Great Job!", "Perfect Mastery!"];
+    let stars = "";
+    for (let i = 1; i <= 5; i++) stars += (i <= rating) ? '<span class="star-filled">\u2605</span>' : '<span class="star-empty">\u2606</span>';
+    document.getElementById('star-display').innerHTML = stars;
+    document.getElementById('final-eval-text').innerText = msgs[rating];
+}
+
+window.onload = () => {
+    // (We removed the old hardcoded iframe logic here, the YouTube API handles it now)
+    const s4grid = document.getElementById('stage4-tiles');
+    CONFIG.stage4Letters.forEach(l => {
+        const t = document.createElement('div');
+        t.className = 'tile'; t.innerText = l;
+        t.onclick = () => fillSelected(l);
+        s4grid.appendChild(t);
+    });
+};
+</script>
+</body>
+</html>
