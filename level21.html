@@ -399,6 +399,7 @@ function showFinalScore() {
     for (let i = 1; i <= 5; i++) stars += (i <= rating) ? '<span class="star-filled">\u2605</span>' : '<span class="star-empty">\u2606</span>';
     document.getElementById('star-display').innerHTML = stars;
     document.getElementById('final-eval-text').innerText = msgs[rating];
+    window.top.postMessage({ type: "autoSaveScore", stars: rating }, "*");
 }
 
 window.onload = () => {
