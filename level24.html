@@ -1,4 +1,4 @@
-﻿<p>&nbsp;</p><br /><p></p>
+<p>&nbsp;</p><br /><p></p>
 
 <html lang="te">
 <head>
@@ -73,7 +73,7 @@
 <body>
 
 <div id="lms-container">
-    <h2 style="color: #2c3e50; text-align: center;">తెలుగు పాఠం: "పూచినపూలు"- అభ్యసన దీపిక</h2>
+    <h2 style="color: #2c3e50; text-align: center;">తెలుగు పాఠం: "పరుగు పందెం"- అభ్యసన దీపిక</h2>
     
     <div class="stage active" id="stage1">
         <h3>Step 1: Watch the Video Lesson</h3>
@@ -108,14 +108,14 @@
 <div class="stage" id="stage4">
         <h3>Step 4: Fill in the Blanks</h3>
         <div style="display: grid; font-size: 28px; gap: 10px; grid-template-columns: repeat(2, 1fr); line-height: 2.2; max-width: 100%; text-align: left;">
-            <div>1. <span class="drop-zone" id="b1" onclick="selectBlank(1)"></span>పాకి</div>
-            <div>2. <span class="drop-zone" id="b2" onclick="selectBlank(2)"></span>లు</div>
-            <div>3. <span class="drop-zone" id="b3" onclick="selectBlank(3)"></span>లక</div>
-            <div>4. <span class="drop-zone" id="b4" onclick="selectBlank(4)"></span>నీగ</div>
-            <div>5. ను<span class="drop-zone" id="b5" onclick="selectBlank(5)"></span>గు</div>
-            <div>6. పూ<span class="drop-zone" id="b6" onclick="selectBlank(6)"></span></div>
-            <div>7. <span class="drop-zone" id="b7" onclick="selectBlank(7)"></span>డు</div>
-            <div>8. <span class="drop-zone" id="b8" onclick="selectBlank(8)"></span>రకాయ</div>
+            <div>1. <span class="drop-zone" id="b1" onclick="selectBlank(1)"></span>మలి</div>
+            <div>2. <span class="drop-zone" id="b2" onclick="selectBlank(2)"></span>రుకు</div>
+            <div>3. <span class="drop-zone" id="b3" onclick="selectBlank(3)"></span>పాకి</div>
+            <div>4. <span class="drop-zone" id="b4" onclick="selectBlank(4)"></span>ల</div>
+            <div>5. <span class="drop-zone" id="b5" onclick="selectBlank(5)"></span>నీగ</div>
+            <div>6. <span class="drop-zone" id="b6" onclick="selectBlank(6)"></span>దే</div>
+            <div>7. <span class="drop-zone" id="b7" onclick="selectBlank(7)"></span>ప</div>
+            <div>8. తా<span class="drop-zone" id="b8" onclick="selectBlank(8)"></span>లు</div>
         </div>
         <div class="tile-grid" id="stage4-tiles"></div>
         <button class="btn-main" id="check-btn" onclick="checkStage4()">Verify Answers</button>
@@ -132,97 +132,95 @@
 
 <script>
 const CONFIG = {
-    // Array of the 2 YouTube Video IDs
+    // Single YouTube Video ID (Converted to an array)
     videoIDs: [
-        "rzosYfyzK6k",
-        "87VAljQ3w7U"
+        "r6z-bg2bffg"
     ], 
     
-    // Stage 2 letters: చు, డు, వి, సీ, పూ, భూ, శు, మూ
+    // Stage 2 letters: కే, కె, థె, పే, సే, వీ, డి, తే
     stage2Letters: [
-        '\u0C1A\u0C41', // చు
-        '\u0C21\u0C41', // డు
-        '\u0C35\u0C3F', // వి
-        '\u0C38\u0C40', // సీ
-        '\u0C2A\u0C42', // పూ
-        '\u0C2D\u0C42', // భూ
-        '\u0C36\u0C41', // శు
-        '\u0C2E\u0C42'  // మూ
+        '\u0C15\u0C47', // కే
+        '\u0C15\u0C46', // కె
+        '\u0C25\u0C46', // థె
+        '\u0C2A\u0C47', // పే
+        '\u0C38\u0C47', // సే
+        '\u0C35\u0C40', // వీ
+        '\u0C21\u0C3F', // డి
+        '\u0C24\u0C47'  // తే
     ], 
 
-    // Stage 4 letters: జూ, తు, తూ, చి, రు, లు, బీ, గూ
+    // Stage 4 letters (Scrambled slightly for the drag-and-drop tiles): గె, నె, చే, తూ, చె, బే, తు, గే
     stage4Letters: [
-        '\u0C1C\u0C42', // జూ
-        '\u0C24\u0C41', // తు
+        '\u0C17\u0C46', // గె
+        '\u0C28\u0C46', // నె
+        '\u0C1A\u0C47', // చే
         '\u0C24\u0C42', // తూ
-        '\u0C1A\u0C3F', // చి
-        '\u0C30\u0C41', // రు
-        '\u0C32\u0C41', // లు
-        '\u0C2C\u0C40', // బీ
-        '\u0C17\u0C42'  // గూ
+        '\u0C1A\u0C46', // చె
+        '\u0C2C\u0C47', // బే
+        '\u0C24\u0C41', // తు
+        '\u0C17\u0C47'  // గే
     ], 
 
-    // Stage 4 answers: తు, జూ, చి, తూ, లు, రు, గూ, బీ
+    // Stage 4 answers: నె, చె, తు, గె, తూ, గే, చే, బే
     stage4Answers: { 
-        b1: '\u0C24\u0C41', // తు
-        b2: '\u0C1C\u0C42', // జూ
-        b3: '\u0C1A\u0C3F', // చి
-        b4: '\u0C24\u0C42', // తూ
-        b5: '\u0C32\u0C41', // లు
-        b6: '\u0C30\u0C41', // రు
-        b7: '\u0C17\u0C42', // గూ
-        b8: '\u0C2C\u0C40'  // బీ
+        b1: '\u0C28\u0C46', // నె
+        b2: '\u0C1A\u0C46', // చె
+        b3: '\u0C24\u0C41', // తు
+        b4: '\u0C17\u0C46', // గె
+        b5: '\u0C24\u0C42', // తూ
+        b6: '\u0C17\u0C47', // గే
+        b7: '\u0C1A\u0C47', // చే
+        b8: '\u0C2C\u0C47', // బే
     }
 };
-
 const wordData = [
     {
-        // తుపాకీ (Tu-pa-kee) - Gun
+        // నెమలి (Ne-ma-li) - Peacock
+        w: '\u0C28\u0C46\u0C2E\u0C32\u0C3F', 
+        l: ['\u0C28\u0C46', '\u0C2E', '\u0C32\u0C3F'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhwJSw2o8kMbpfrzbEmUclvZaFi9l0K9u8deA4Botb33FWgicUeHgDx_80A1gtasXaf3IE6jAqD7QAi2UW5z2-9_iDIr9EcSrlQntFyNwJmG_Jtx01LT7OSj4pd6bbNpWsHk6-btbI8dkN3NZLeh5Q8nGmz8IkXC7wL_fGM31ZLCoVqc97faOBvgNGnjykC' // Placeholder
+    },
+    {
+        // చెరుకు (Che-ru-ku) - Sugarcane
+        w: '\u0C1A\u0C46\u0C30\u0C41\u0C15\u0C41', 
+        l: ['\u0C1A\u0C46', '\u0C30\u0C41', '\u0C15\u0C41'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEg-PLJ7MZSIv3WQfxshO0yjgWYdPSyjJRis0B2oSyZDfj1YTDf8bbZtEaPCeC0ow3qaNqpO0zaEFHm3cfJkF-JA_nnZgrgHNXQxi2dd6bfWzXPFCQ1LFGvkT6MDM-algXtFgVIn-r6ny4SfakuViPEkjh4fk9x2tZVRnInEd9KtVOpS3-DX20LDS9gc4ILo' // Placeholder
+    },
+    {
+        // తుపాకీ (Tu-pa-kee) - Gun (Matched to previous image)
         w: '\u0C24\u0C41\u0C2A\u0C3E\u0C15\u0C40', 
         l: ['\u0C24\u0C41', '\u0C2A\u0C3E', '\u0C15\u0C40'], 
-        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhw8FNjmeLMPBt_zQ94k3g8kee45uQzJnWkOVKkZxBJV0GlrOtuYhKLaMs81arxim4DnAD3tfk7TXw1HE27-osxnyzjCxi9cGHbb5Exk_xiTiuiDeyKMnjeRRb47AQ_q9HcOBOExHy81QEi3Z8Z8A22olRYETzyb0nRsF5t8bhNy1Gy-EP955PsoUqKyFDk' // Placeholder
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhw8FNjmeLMPBt_zQ94k3g8kee45uQzJnWkOVKkZxBJV0GlrOtuYhKLaMs81arxim4DnAD3tfk7TXw1HE27-osxnyzjCxi9cGHbb5Exk_xiTiuiDeyKMnjeRRb47AQ_q9HcOBOExHy81QEi3Z8Z8A22olRYETzyb0nRsF5t8bhNy1Gy-EP955PsoUqKyFDk' 
     },
     {
-        // పూలు (Poo-lu) - Flowers
-        w: '\u0C2A\u0C42\u0C32\u0C41', 
-        l: ['\u0C2A\u0C42', '\u0C32\u0C41'], 
-        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEgyfr7Nh64aFrS5n53idYDZ8uttpEieteKq1Nwmp2zJgeO2uLFk3bhQ5x5jnqGaNt-X3Xy2qiehq7FwO_U3Ycr1krrnHEh9-336HAMY4ipDcBGc8RtUwC1zgf57yT-Tuc7PMsLtddUjDCSJe7CNbrdWnksIBgG1Z8dJ_NznxWsCuRwx1j8T8tDIugsGQxky' // Placeholder
+        // గెల (Ge-la) - Bunch/Cluster (of bananas etc.)
+        w: '\u0C17\u0C46\u0C32', 
+        l: ['\u0C17\u0C46', '\u0C32'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhw43vjkI9G82pxFPi2g6CeDKlzAQ7zB6ZccSsUkvxKxmkUmu7thG2m3au4XUqalBAe9x5Az-yswfbIpbiJVgjRfgNWdQuJF6cop8X0BtAzvBM5cw-TpB3-O98SyQuFpWMGIBv-UGpSGU8dq6C2vBEyNaGHeXQJ-d4ry977qm7N9DkAZNCdVbAayItm-cJq' // Placeholder
     },
     {
-        // జూలు (Joo-lu) - Mane / Hair
-        w: '\u0C1C\u0C42\u0C32\u0C41', 
-        l: ['\u0C1C\u0C42', '\u0C32\u0C41'], 
-        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEg59bYkWstUPLXvfAS6pLh4_0XuOqZ8RyueWstM6n9tVQ8FaIx8fTK06MlvjIDrwrzTDSvUEAyJcO1O2YZtrmT11bHDOJg33ldUxgx5rA9XcRMtoyK1Qe0rX69V0FknN_VNQvHu-2JwhbMrPaCIErFV0uk21VcZGPUL-IYZ6E2OLilugYY_nGAp1KtdrItq' // Placeholder
-    },
-    {
-        // చిలక (Chi-la-ka) - Parrot (Original Image Kept)
-        w: '\u0C1A\u0C3F\u0C32\u0C15', 
-        l: ['\u0C1A\u0C3F', '\u0C32', '\u0C15'], 
-        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEgKynAKTt12Qz8tQsTEVOnP9-SE2SVt-PBd3Rsc7Mc1gy9i4tBedrNDFElz2c2rgg7iafwgKuLcYMESBmz_-XdZ8QrfWdrsshrUtAVSiiNPhy8XZuTa_mWx7GzLhCYZXqsnDprtGdVZ79V82eSPviEZCxxV-jRPTuOZ5EnpByUXGel2d8TiuZb94Uy221kF' 
-    },
-    {
-        // తూనీగా (Too-nee-ga) - Dragonfly
+        // తూనీగా (Too-nee-ga) - Dragonfly (Matched to previous image)
         w: '\u0C24\u0C42\u0C28\u0C40\u0C17\u0C3E', 
         l: ['\u0C24\u0C42', '\u0C28\u0C40', '\u0C17\u0C3E'], 
-        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhcf1RWSwrxqkfwQcALxwB6MAdBBR3VCQhLVnvgOLmM5lpodxNjYKcvWjJ3xgroMnq-NP-iKmiZFd641CBr5ARXXDP4ykT1w2byornuetxFWgQAsV_AfyNKH5GYRJoi6ixjWc7snWhSR8fcOpjhkwH18JP6Wplx0AJVvWcDBMWOF-2Vsxfridabi2d7fJqQ' // Placeholder
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhcf1RWSwrxqkfwQcALxwB6MAdBBR3VCQhLVnvgOLmM5lpodxNjYKcvWjJ3xgroMnq-NP-iKmiZFd641CBr5ARXXDP4ykT1w2byornuetxFWgQAsV_AfyNKH5GYRJoi6ixjWc7snWhSR8fcOpjhkwH18JP6Wplx0AJVvWcDBMWOF-2Vsxfridabi2d7fJqQ'
     },
     {
-        // నురుగు (Nu-ru-gu) - Foam / Froth
-        w: '\u0C28\u0C41\u0C30\u0C41\u0C17\u0C41', 
-        l: ['\u0C28\u0C41', '\u0C30\u0C41', '\u0C17\u0C41'], 
-        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhZQCvnjJF1TEsN06I2xk-t6UaCUkDdJ6RI2FgG9yhoqWvsYGK6acLdi8nspFTRbD9XDIuQkshPfzYxPZoooj9HDGX6_nclol9OYJaxvKQDjkNPg2dvaP1UrrQhFJF2TZrMKfifDJeosCpFPnuj-5niEzFAj33xXUAPH-3zsW7DgbeClUD_UMhKieez1Kv8' // Placeholder
+        // గేదె (Ge-de) - Buffalo
+        w: '\u0C17\u0C47\u0C26\u0C46', 
+        l: ['\u0C17\u0C47', '\u0C26\u0C46'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEgVXO9OTGrAEZ4F0Csvp4h1MSP8rBR9Z8YwpjUj7cZNZpSSlg3Xd6B6JOHj88myoAWJKzlrGKuhn4eJywZeorVhJp12hG1zsVuoN9bkJlJAvz2qkb1ZeR-vTw50u55TixLf1BsQe6MljxLDlE9Vhi0iESLg2F92s0-7AP_FpyOa0PvfXRbXibwe-q6w1t9B' // Placeholder
     },
     {
-        // బీరకాయ (Bee-ra-ka-ya) - Ridge Gourd (Original Image Kept)
-        w: '\u0C2C\u0C40\u0C30\u0C15\u0C3E\u0C2F', 
-        l: ['\u0C2C\u0C40', '\u0C30', '\u0C15\u0C3E', '\u0C2F'], 
-        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEh8PUlFmH9NavggNoO6VBtVeGebLh6tR_HM8XSX8z_MUxMMS1fMMcBxjVLFszkgW-i2SsmVvOpDVo9aGKYnDf-7EnysAv1OshTSeO2YiS4tP2fTv_yteTnrq2oH1mm9_J3xkGwrP9dZOihf1tl7ORaWMOld78or3eARHDW6_5FRf1lienBNf7Ol7bzROG8r' 
+        // చేప (Che-pa) - Fish
+        w: '\u0C1A\u0C47\u0C2A', 
+        l: ['\u0C1A\u0C47', '\u0C2A'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEjrBkJLE_e91VoC2rt0mLF_kdOL-xehhC7YxlLLQYUSg8wIoKSxq8wglE_1PwAYuwBH-kfFaM4R09jaP3wz3lgdvrzUy_lKyxvCrQsvJDJyt_ELEMuxP7iH33NYk9W-HUv3KeoDh0mSnknrN_ua-9vwdNdB0yX95fxxF6oyLGEMCFS4xk2q3-BI6rkFMwte' // Placeholder
     },
     {
-        // గూడు (Goo-du) - Nest
-        w: '\u0C17\u0C42\u0C21\u0C41', 
-        l: ['\u0C17\u0C42', '\u0C21\u0C41'], 
-        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhKowZ6a4w1WiBuQjM3jho90PCewB2TFAykTcu5oeAakhXpzpwOahsYwY4Z07lCwOZLd5CBOq0lH-ztFCNUGVm0npGNgJE24F-B9j84opnz912G9s5x4BaVVtwzcwtBlbZETmVTxDUcxDaOVrbQyAfoaQhWyRyVuRGG14q9i7CRMHBEfWstRdmxtNEYEnuh' // Placeholder
+        // తాబేలు (Ta-be-lu) - Tortoise/Turtle
+        w: '\u0C24\u0C3E\u0C2C\u0C47\u0C32\u0C41', 
+        l: ['\u0C24\u0C3E', '\u0C2C\u0C47', '\u0C32\u0C41'], 
+        img: 'https://blogger.googleusercontent.com/img/a/AVvXsEg5FCPKkkTOYAVqHiY0gCUDTIUsYzU5rdTflWtnF7ySM_wyJ2wJZX_CxuVg5VsF86V5a0hheqwFV7V6CPwbSWVrSlytbxm-o2XparOjr09UwddR5NVxTwgkUFoDhYny_CAAMeps1Bp9uqFxRyOnY0XUa6duRg9i8KnsCQbI2Nf7DY10uiptYWZKv_ED3lH9' // Placeholder
     }
 ];
 let totalAttempts = 0;
@@ -398,9 +396,6 @@ function showFinalScore() {
     for (let i = 1; i <= 5; i++) stars += (i <= rating) ? '<span class="star-filled">\u2605</span>' : '<span class="star-empty">\u2606</span>';
     document.getElementById('star-display').innerHTML = stars;
     document.getElementById('final-eval-text').innerText = msgs[rating];
-
-    // AUTOMATION: Beams the calculated rating silently to the main blog!
-    window.top.postMessage({ type: "autoSaveScore", stars: rating }, "*");
 }
 
 window.onload = () => {
