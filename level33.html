@@ -380,6 +380,9 @@ function showFinalScore() {
     document.getElementById('finish').classList.add('active');
     
     let rating = (totalAttempts <= 35) ? 5 : (totalAttempts <= 45) ? 4 : (totalAttempts <= 55) ? 3 : (totalAttempts <= 65) ? 2 : 1;
+
+     // AUTOMATION: Beams the calculated rating silently to the main blog!
+    window.top.postMessage({ type: "autoSaveScore", stars: rating }, "*");
     let msgs = [
         "", 
         "\u0C2E\u0C30\u0C3F\u0C02\u0C24 \u0C2A\u0C4D\u0C30\u0C3E\u0C15\u0C4D\u0C1F\u0C40\u0C38\u0C4D \u0C1A\u0C47\u0C2F\u0C3E\u0C32\u0C3F!",
