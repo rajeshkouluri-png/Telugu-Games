@@ -1,0 +1,296 @@
+﻿<div id="telugu-lesson-app">
+<style>
+    /* CSS Isolation */
+    #telugu-lesson-app { font-family: 'Gautami', 'Mandali', sans-serif; background-color: #ffffff; color: #333; line-height: 1.6; padding: 15px; max-width: 650px; margin: 20px auto; border: 2px solid #e1e4e8; border-radius: 12px; box-sizing: border-box; }
+    #telugu-lesson-app * { box-sizing: border-box; }
+    #telugu-lesson-app .progress-bar { width: 100%; height: 10px; background: #ddd; border-radius: 5px; margin-bottom: 20px; }
+    #telugu-lesson-app #progress { height: 100%; background: #4caf50; border-radius: 5px; transition: 0.5s; }
+    #telugu-lesson-app .stage { display: none; }
+    #telugu-lesson-app .active { display: block; }
+    #telugu-lesson-app h2 { color: #1a73e8; border-bottom: 2px solid #eee; padding-bottom: 10px; text-align: center; font-size: 20px;}
+    
+    .topic-header { background: #e3f2fd; padding: 15px; border-radius: 8px; text-align: center; border: 2px solid #90caf9; margin-bottom: 15px; }
+    .topic-header h3 { margin: 0; color: #1565c0; font-size: 22px; }
+    .topic-header p { margin: 5px 0 0 0; color: #e65100; font-weight: bold; }
+    
+    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; margin: 15px 0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    
+    .colorful-label { background: linear-gradient(135deg, #fff3e0, #ffe0b2); padding: 15px; border-left: 5px solid #ff9800; border-radius: 8px; margin-bottom: 20px; font-weight: bold; color: #d84315; font-size: 16px; }
+    .colorful-label-blue { background: #e3f2fd; border-left: 5px solid #2196f3; padding: 15px; border-radius: 8px; margin-bottom: 20px; color: #1565c0; font-size: 15px;}
+    
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; background: white; border-radius: 8px; overflow: hidden; }
+    table, th, td { border: 1px solid #e0e0e0; padding: 10px; text-align: left; }
+    th { background-color: #1a73e8; color: white; }
+    
+    .q-label { background: #e8f5e9; color: #2e7d32; border: 2px solid #a5d6a7; padding: 10px; border-radius: 8px; display: block; margin-bottom: 10px; font-size: 16px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .quiz-q { background: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee; }
+    
+    /* MCQs */
+    .options label { display: block; padding: 10px; cursor: pointer; transition: 0.3s; border-radius: 6px; border: 2px solid transparent; margin-bottom: 5px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .options label:hover { background: #f1f3f4; border-color: #d2e3fc; }
+    
+    /* Clickable Words */
+    .sentence-box { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .click-word { padding: 8px 15px; background: #ffffff; border: 2px solid #ba68c8; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 16px; color: #4a148c; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); user-select: none; }
+    .click-word:hover { background: #f3e5f5; transform: translateY(-2px); }
+    .click-word.selected { background: #ab47bc; color: white; border-color: #8e24aa; }
+    .click-word.correct { background: #4caf50 !important; color: white !important; border-color: #388e3c !important; }
+    .click-word.wrong { background: #f44336 !important; color: white !important; border-color: #d32f2f !important; }
+    .click-word.correct-outline { border-color: #4caf50 !important; background: #e8f5e9 !important; color: #2e7d32 !important; border-width: 3px !important; }
+
+    .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+    .t-btn { flex: 1 1 45%; padding: 12px; background: #1a73e8; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.15); transition: 0.2s; width: 100%; margin-top:10px; }
+    .t-btn:hover { background: #1557b0; transform: translateY(-2px); }
+    .t-btn-green { background: #34a853; }
+    .t-btn-green:hover { background: #2e7d32; }
+    
+    .star-gold { color: #fbbc04; font-size: 40px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .star-gray { color: #dadce0; font-size: 40px; }
+</style>
+
+    <div class="progress-bar">
+        <div id="progress" style="width: 20%;"></div>
+    </div>
+
+    <div id="stage1" class="stage active">
+        <div class="topic-header">
+            <h3>విషయం: విశేషణాలు (Adjectives)</h3>
+            <p>Subject: తెలుగు (Telugu)</p>
+        </div>
+        <div class="video-wrapper">
+            <iframe id="yt-lesson-video" src="https://www.youtube.com/embed/Hnai2hmyvAY?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="colorful-label" style="text-align:center;">
+            విశేషణాల గురించి తెలుసుకోవడానికి ముందుగా ఈ వీడియోను పూర్తిగా చూడండి.
+        </div>
+        <button class="t-btn" onclick="nextStage(2)">తదుపరి దశ (Lesson)</button>
+    </div>
+
+    <div id="stage2" class="stage">
+        <h2>దశ 2: విశేషణాలు - వివరణ</h2>
+        <div class="colorful-label">
+            నామవాచకం (వ్యక్తులు, వస్తువులు, స్థలాలు) లేదా సర్వనామం యొక్క గుణాన్ని, లక్షణాన్ని, రంగును, రుచిని లేదా సంఖ్యను తెలిపే పదాలను "విశేషణాలు (Adjectives)" అంటారు.
+        </div>
+        <table>
+            <tr><th>రకాలు</th><th>ఉదాహరణలు (Examples)</th></tr>
+            <tr><td>రంగులు</td><td>ఎరుపు (red), తెలుపు (white), నలుపు, నీలం</td></tr>
+            <tr><td>రుచులు</td><td>తీయని (sweet), పుల్లని (sour), చేదు (bitter)</td></tr>
+            <tr><td>గుణాలు</td><td>మంచి (good), చెడ్డ (bad), అందమైన (beautiful)</td></tr>
+            <tr><td>పరిమాణాలు/సంఖ్య</td><td>పెద్ద (big), చిన్న (small), నలుగురు (four)</td></tr>
+        </table>
+        
+        <div class="colorful-label-blue">
+            <b>వాక్యాలలో ఉదాహరణలు:</b><br>
+            1. రాము <b>మంచి</b> బాలుడు. (మంచి - Adjective)<br>
+            2. ఆవు <b>తెల్లని</b> జంతువు. (తెల్లని - Adjective)<br>
+            3. ఇది <b>పెద్ద</b> చెట్టు. (పెద్ద - Adjective)
+        </div>
+        
+        <button class="t-btn" onclick="nextStage(3)">ప్రాక్టీస్ ప్రారంభించండి</button>
+    </div>
+
+    <div id="stage3" class="stage">
+        <h2>దశ 3: విశేషణాన్ని గుర్తించండి (10)</h2>
+        <div class="colorful-label" style="background: #fce4ec; border-color: #f06292; color: #ad1457; font-size:14px;">
+            కింద ఇచ్చిన ప్రతి వాక్యంలో, విశేషణం (Adjective) అయిన పదం మీద క్లిక్ చేయండి.
+        </div>
+        <div id="click-quiz"></div>
+        
+        <button id="btn-submit-click" class="t-btn" onclick="evaluateClickQuiz()">సబ్మిట్ చేయండి</button>
+        <button id="btn-next-click" class="t-btn t-btn-green" style="display:none;" onclick="nextStage(4)">తదుపరి దశకు వెళ్ళండి</button>
+    </div>
+
+    <div id="stage4" class="stage">
+        <h2>దశ 4: బహుళైచ్ఛిక ప్రశ్నలు (6)</h2>
+        <div id="mcq-quiz"></div>
+        <button id="btn-submit-mcq" class="t-btn" onclick="evaluateMCQ()">సబ్మిట్ చేయండి</button>
+        <button id="btn-next-mcq" class="t-btn t-btn-green" style="display:none;" onclick="showFinal()">ఫలితాలు చూడండి</button>
+    </div>
+
+    <div id="stage5" class="stage" style="text-align:center;">
+        <h2>మీ ఫలితాలు</h2>
+        <div id="final-stats" style="font-size:24px; font-weight:bold; margin:15px 0; color:#1a73e8;"></div>
+        <div id="star-rating"></div>
+        <p id="star-msg" style="color:#34a853; font-weight:bold; font-size:22px; margin-top:10px;"></p>
+        <button class="t-btn" style="margin-top:20px;" onclick="location.reload()">మళ్ళీ మొదటి నుండి</button>
+    </div>
+</div>
+
+<script>
+    // Data for Click Sentences Quiz (Stage 3)
+    const clickSentences = [
+        { words: ["సీత", "అందమైన", "అమ్మాయి."], correct: 1 },
+        { words: ["ఆ", "చెట్టు", "చాలా", "పెద్దది."], correct: 3 },
+        { words: ["మామిడిపండు", "తీయగా", "ఉంటుంది."], correct: 1 },
+        { words: ["ఆకాశం", "నీలం", "రంగులో", "ఉంది."], correct: 1 },
+        { words: ["నాకు", "వేడి", "పాలు", "కావాలి."], correct: 1 },
+        { words: ["కాకి", "నల్లని", "పక్షి."], correct: 1 },
+        { words: ["రవి", "తెలివైన", "విద్యార్థి."], correct: 1 },
+        { words: ["ఇది", "కొత్త", "పుస్తకం."], correct: 1 },
+        { words: ["నిమ్మకాయ", "పుల్లగా", "ఉంటుంది."], correct: 1 },
+        { words: ["ఏనుగు", "భారీ", "జంతువు."], correct: 1 }
+    ];
+
+    // Data for MCQs (Stage 4)
+    const mcqs = [
+        { q: "నామవాచకం యొక్క గుణాన్ని లేదా రంగును తెలిపే పదాన్ని ఏమంటారు?", a: ["విశేషణం", "సర్వనామం", "క్రియ"], correct: 0 },
+        { q: "విశేషణానికి ఆంగ్లంలో ఏమంటారు?", a: ["Noun", "Verb", "Adjective"], correct: 2 },
+        { q: "'చల్లని గాలి వీస్తోంది' - ఇందులో విశేషణం ఏది?", a: ["గాలి", "వీస్తోంది", "చల్లని"], correct: 2 },
+        { q: "'గులాబీ ఎర్రగా ఉంది' - ఇందులో విశేషణం ఏది?", a: ["గులాబీ", "ఎర్రగా", "ఉంది"], correct: 1 },
+        { q: "'ఇది పాత ఇల్లు' - ఇందులో విశేషణం ఏది?", a: ["ఇది", "పాత", "ఇల్లు"], correct: 1 },
+        { q: "'నలుగురు పిల్లలు ఆడుకుంటున్నారు' - ఇందులో సంఖ్యావాచక విశేషణం ఏది?", a: ["నలుగురు", "పిల్లలు", "ఆడుకుంటున్నారు"], correct: 0 }
+    ];
+
+    let clickScore = 0;
+    let mcqScore = 0;
+    let selectedWords = {}; // To track clicked word indices
+
+    function nextStage(n) {
+        // వీడియోను ఆపడానికి కోడ్
+        if (n === 2) {
+            let iframe = document.getElementById('yt-lesson-video');
+            if (iframe) iframe.src = iframe.src;
+        }
+
+        document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+        document.getElementById('stage' + n).classList.add('active');
+        document.getElementById('progress').style.width = (n * 20) + '%';
+        
+        if(n === 3) loadClickQuiz();
+        if(n === 4) loadMCQs();
+        
+        // పేజీ పైకి స్క్రోల్ అవ్వడానికి
+        document.getElementById('telugu-lesson-app').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // --- STAGE 3 LOGIC ---
+    function loadClickQuiz() {
+        let html = '';
+        clickSentences.forEach((item, sIdx) => {
+            html += `<div class="quiz-q" id="click-q-${sIdx}">
+                <span class="q-label">${sIdx + 1}. ఈ వాక్యంలో విశేషణం ఏది?</span>
+                <div class="sentence-box">`;
+            item.words.forEach((word, wIdx) => {
+                html += `<span class="click-word" id="word-${sIdx}-${wIdx}" onclick="selectWord(${sIdx}, ${wIdx})">${word}</span>`;
+            });
+            html += `</div></div>`;
+        });
+        document.getElementById('click-quiz').innerHTML = html;
+    }
+
+    function selectWord(sIdx, wIdx) {
+        document.querySelectorAll(`#click-q-${sIdx} .click-word`).forEach(w => w.classList.remove('selected'));
+        document.getElementById(`word-${sIdx}-${wIdx}`).classList.add('selected');
+        selectedWords[sIdx] = wIdx;
+    }
+
+    function evaluateClickQuiz() {
+        clickScore = 0;
+        document.querySelectorAll('.click-word').forEach(w => w.onclick = null); // disable clicks
+
+        clickSentences.forEach((item, sIdx) => {
+            let selected = selectedWords[sIdx];
+            let correct = item.correct;
+
+            if (selected === correct) {
+                clickScore++;
+                document.getElementById(`word-${sIdx}-${correct}`).classList.add('correct');
+            } else {
+                if (selected !== undefined) {
+                    document.getElementById(`word-${sIdx}-${selected}`).classList.add('wrong');
+                }
+                document.getElementById(`word-${sIdx}-${correct}`).classList.add('correct-outline');
+            }
+        });
+        
+        document.getElementById('btn-submit-click').style.display = 'none';
+        document.getElementById('btn-next-click').style.display = 'block';
+        document.getElementById('telugu-lesson-app').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // --- STAGE 4 LOGIC ---
+    function loadMCQs() {
+        let html = '';
+        mcqs.forEach((item, index) => {
+            html += `<div class="quiz-q"><span class="q-label">${index + 1}. ${item.q}</span><div class="options">`;
+            item.a.forEach((opt, i) => {
+                html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`;
+            });
+            html += `</div></div>`;
+        });
+        document.getElementById('mcq-quiz').innerHTML = html;
+    }
+
+    function evaluateMCQ() {
+        mcqScore = 0;
+        mcqs.forEach((item, index) => {
+            const inputs = document.querySelectorAll(`input[name="q${index}"]`);
+            inputs.forEach(inp => inp.disabled = true); 
+
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            const correctInput = document.querySelector(`input[name="q${index}"][value="${item.correct}"]`);
+            
+            if(correctInput) {
+                correctInput.parentElement.style.background = "#e8f5e9";
+                correctInput.parentElement.style.border = "2px solid #4caf50";
+                correctInput.parentElement.style.fontWeight = "bold";
+            }
+
+            if(selected) {
+                if(parseInt(selected.value) === item.correct) {
+                    mcqScore++;
+                } else {
+                    selected.parentElement.style.background = "#ffebee";
+                    selected.parentElement.style.border = "2px solid #f44336";
+                    selected.parentElement.style.fontWeight = "bold";
+                }
+            }
+        });
+        
+        document.getElementById('btn-submit-mcq').style.display = 'none';
+        document.getElementById('btn-next-mcq').style.display = 'block';
+        document.getElementById('telugu-lesson-app').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // --- STAGE 5 LOGIC (RESULTS) ---
+    function showFinal() {
+        document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+        document.getElementById('stage5').classList.add('active');
+        document.getElementById('progress').style.width = '100%';
+        document.getElementById('telugu-lesson-app').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        let totalScore = clickScore + mcqScore;
+        let maxScore = 16; // 10 clicks + 6 MCQs
+        
+        document.getElementById('final-stats').innerHTML = 
+            `\u0C2E\u0C4A\u0C24\u0C4D\u0C24\u0C02 \u0C38\u0C4D\u0C15\u0C4B\u0C30\u0C41: ${totalScore} / ${maxScore}<br>
+            <span style="font-size:18px; color:#555;">(Find Adjectives: ${clickScore}/10 | MCQs: ${mcqScore}/6)</span>`;
+        
+        let percentage = (totalScore / maxScore) * 100;
+        let starCount = 0;
+        
+        if(percentage >= 90) starCount = 5;
+        else if(percentage >= 70) starCount = 4;
+        else if(percentage >= 50) starCount = 3;
+        else if(percentage >= 30) starCount = 2;
+        else starCount = 1;
+
+        let sHtml = '';
+        for(let i=1; i<=5; i++) {
+            sHtml += `<span class="${i <= starCount ? 'star-gold' : 'star-gray'}">★</span>`;
+        }
+        document.getElementById('star-rating').innerHTML = sHtml;
+        
+        // Unicode mapping for feedback
+        const msgs = [
+            "\u0C2E\u0C33\u0C4D\u0C33\u0C40 \u0C2A\u0C4D\u0C30\u0C2F\u0C24\u0C4D\u0C28\u0C3F\u0C02\u0C1A\u0C02\u0C21\u0C3F", // మళ్ళీ ప్రయత్నించండి
+            "\u0C2A\u0C30\u0C4D\u0C35\u0C3E\u0C32\u0C47\u0C26\u0C41", // పర్వాలేదు
+            "\u0C2E\u0C02\u0C1A\u0C3F \u0C2A\u0C4D\u0C30\u0C2F\u0C24\u0C4D\u0C28\u0C02", // మంచి ప్రయత్నం
+            "\u0C1A\u0C3E\u0C32\u0C3E \u0C2C\u0C3E\u0C17\u0C41\u0C02\u0C26\u0C3F", // చాలా బాగుంది
+            "\u0C05\u0C26\u0C4D\u0C2D\u0C41\u0C24\u0C02!" // అద్భుతం!
+        ];
+        document.getElementById('star-msg').textContent = msgs[starCount-1];
+    }
+</script>
+</div>

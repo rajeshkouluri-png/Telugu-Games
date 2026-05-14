@@ -1,0 +1,321 @@
+﻿<div id="telugu-lesson-app">
+<style>
+    /* CSS Isolation */
+    #telugu-lesson-app { font-family: 'Gautami', 'Mandali', sans-serif; background-color: #ffffff; color: #333; line-height: 1.6; padding: 15px; max-width: 650px; margin: 20px auto; border: 2px solid #e1e4e8; border-radius: 12px; box-sizing: border-box; }
+    #telugu-lesson-app * { box-sizing: border-box; }
+    #telugu-lesson-app .progress-bar { width: 100%; height: 10px; background: #ddd; border-radius: 5px; margin-bottom: 20px; }
+    #telugu-lesson-app #progress { height: 100%; background: #4caf50; border-radius: 5px; transition: 0.5s; }
+    #telugu-lesson-app .stage { display: none; }
+    #telugu-lesson-app .active { display: block; }
+    #telugu-lesson-app h2 { color: #1a73e8; border-bottom: 2px solid #eee; padding-bottom: 10px; text-align: center; }
+    
+    .topic-header { background: #e3f2fd; padding: 15px; border-radius: 8px; text-align: center; border: 2px solid #90caf9; margin-bottom: 15px; }
+    .topic-header h3 { margin: 0; color: #1565c0; font-size: 22px; }
+    .topic-header p { margin: 5px 0 0 0; color: #e65100; font-weight: bold; }
+    
+    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; margin: 15px 0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    
+    .colorful-label { background: linear-gradient(135deg, #fff3e0, #ffe0b2); padding: 15px; border-left: 5px solid #ff9800; border-radius: 8px; margin-bottom: 20px; font-weight: bold; color: #d84315; font-size: 16px; }
+    
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; background: white; border-radius: 8px; overflow: hidden; }
+    table, th, td { border: 1px solid #e0e0e0; padding: 12px; text-align: left; }
+    th { background-color: #1a73e8; color: white; }
+    
+    .q-label { background: #e8f5e9; color: #2e7d32; border: 2px solid #a5d6a7; padding: 10px; border-radius: 8px; display: block; margin-bottom: 10px; font-size: 16px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .quiz-q { background: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee; }
+    .options label { display: block; padding: 10px; cursor: pointer; transition: 0.3s; border-radius: 6px; border: 2px solid transparent; margin-bottom: 5px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .options label:hover { background: #f1f3f4; border-color: #d2e3fc; }
+    
+    .ord-label { background: #fff3e0; color: #e65100; border: 2px solid #ffcc80; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-weight: bold; display: block; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .scramble-box { background: #f3e5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e1bee7; }
+    .word-bank { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
+    .word { background: white; border: 2px solid #ce93d8; padding: 8px 15px; border-radius: 20px; cursor: pointer; user-select: none; font-weight: bold; color: #6a1b9a; transition: 0.2s; }
+    .word:hover { background: #f3e5f5; transform: translateY(-2px); }
+    .user-answer { min-height: 50px; background: white; border: 2px dashed #ab47bc; padding: 10px; border-radius: 8px; display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; transition: 0.3s; }
+    .correct-ans-div { display: none; margin-top: 10px; color: #2e7d32; font-weight: bold; background: #e8f5e9; padding: 8px; border-radius: 5px; border: 1px solid #a5d6a7; }
+
+    .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+    .t-btn { flex: 1 1 45%; padding: 12px; background: #1a73e8; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.15); transition: 0.2s; width: 100%; margin-top:10px; }
+    .t-btn:hover { background: #1557b0; transform: translateY(-2px); }
+    .t-btn-green { background: #34a853; }
+    .t-btn-green:hover { background: #2e7d32; }
+    .t-btn-red { background: #ea4335; }
+    .t-btn-red:hover { background: #c62828; }
+    
+    .star-gold { color: #fbbc04; font-size: 40px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .star-gray { color: #dadce0; font-size: 40px; }
+</style>
+
+    <div class="progress-bar">
+        <div id="progress" style="width: 20%;"></div>
+    </div>
+
+    <div id="stage1" class="stage active">
+        <div class="topic-header">
+            <h3>విషయం: ప్రశ్నార్థక పదాలు (WH Questions)</h3>
+            <p>Subject: తెలుగు (Telugu)</p>
+        </div>
+        <div class="video-wrapper">
+            <iframe id="yt-lesson-video" src="https://www.youtube.com/embed/6SrjV9ynaKM?enablejsapi=1" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="colorful-label" style="text-align:center; background: #e3f2fd; border-color: #2196f3; color: #1565c0;">
+            ప్రశ్నార్థక పదాల గురించి తెలుసుకోవడానికి ముందుగా ఈ వీడియోను పూర్తిగా చూడండి.
+        </div>
+        <button class="t-btn" onclick="nextStage(2)">తదుపరి దశ (Lesson)</button>
+    </div>
+
+    <div id="stage2" class="stage">
+        <h2>దశ 2: ప్రశ్నార్థక పదాల వివరణ</h2>
+        <div class="colorful-label">
+            తెలుగులో ఏదైనా విషయాన్ని అడగడానికి మనం కొన్ని ప్రత్యేక పదాలను ఉపయోగిస్తాం. వీటినే "ప్రశ్నార్థక పదాలు (WH Words)" అంటారు.
+        </div>
+        <table>
+            <tr><th>పదం</th><th>ఆంగ్లంలో..</th><th>వాడకం</th></tr>
+            <tr><td>ఎవరు?</td><td>Who?</td><td>వ్యక్తుల గురించి</td></tr>
+            <tr><td>ఏమిటి?</td><td>What?</td><td>వస్తువులు/విషయాల గురించి</td></tr>
+            <tr><td>ఎక్కడ?</td><td>Where?</td><td>ప్రదేశాల గురించి</td></tr>
+            <tr><td>ఎప్పుడు?</td><td>When?</td><td>సమయం గురించి</td></tr>
+            <tr><td>ఎందుకు?</td><td>Why?</td><td>కారణం గురించి</td></tr>
+            <tr><td>ఎలా?</td><td>How?</td><td>విధానం గురించి</td></tr>
+        </table>
+        <div class="colorful-label" style="background: #fff9c4; border-color: #fbc02d; color: #f57f17; margin-top:20px;">
+            📌 గుర్తుంచుకోండి: తెలుగులో ప్రశ్న పూర్తయిన తర్వాత తప్పనిసరిగా ప్రశ్నార్థక చిహ్నం (?) ఉంచాలి.
+        </div>
+        <button class="t-btn" onclick="nextStage(3)">క్విజ్ ప్రారంభించండి</button>
+    </div>
+
+    <div id="stage3" class="stage">
+        <h2>దశ 3: బహుళైచ్ఛిక ప్రశ్నలు (10)</h2>
+        <div id="mcq-quiz"></div>
+        <button id="btn-submit-mcq" class="t-btn" onclick="evaluateMCQ()">సబ్మిట్ చేయండి</button>
+        <button id="btn-next-mcq" class="t-btn t-btn-green" style="display:none;" onclick="nextStage(4)">తదుపరి దశకు వెళ్ళండి</button>
+    </div>
+
+    <div id="stage4" class="stage">
+        <h2>దశ 4: సరైన ప్రశ్నను తయారు చేయండి</h2>
+        <div class="colorful-label" style="background: #fce4ec; border-color: #f06292; color: #ad1457; font-size:14px;">
+            కింద ఇచ్చిన జవాబు ఆధారంగా, అస్తవ్యస్తంగా ఉన్న పదాలను క్లిక్ చేసి సరైన వరుసలో పెట్టి ప్రశ్నను తయారు చేయండి.
+        </div>
+        <div id="order-quiz"></div>
+        
+        <div class="btn-group">
+            <button id="btn-submit-ord" class="t-btn" onclick="evaluateOrder()">సబ్మిట్ చేయండి</button>
+            <button id="btn-retry-ord" class="t-btn t-btn-red" style="display:none;" onclick="retryOrder()">మళ్ళీ ప్రయత్నించండి</button>
+            <button id="btn-next-ord" class="t-btn t-btn-green" style="display:none;" onclick="showFinal()">ఫలితాలు చూడండి</button>
+        </div>
+    </div>
+
+    <div id="stage5" class="stage" style="text-align:center;">
+        <h2>మీ ఫలితాలు</h2>
+        <div id="final-stats" style="font-size:24px; font-weight:bold; margin:15px 0; color:#1a73e8;"></div>
+        <div id="star-rating"></div>
+        <p id="star-msg" style="color:#34a853; font-weight:bold; font-size:22px; margin-top:10px;"></p>
+        <button class="t-btn" style="margin-top:20px;" onclick="location.reload()">మళ్ళీ మొదటి నుండి</button>
+    </div>
+</div>
+
+<script>
+    const mcqs = [
+        { q: "\u0C2E\u0C40\u0C30\u0C41 ____ \u0C09\u0C02\u0C1F\u0C41\u0C28\u0C4D\u0C28\u0C3E\u0C30\u0C41?", a: ["\u0C0E\u0C35\u0C30\u0C41", "\u0C0E\u0C15\u0C4D\u0C15\u0C21", "\u0C0E\u0C02\u0C26\u0C41\u0C15\u0C41"], correct: 1 },
+        { q: "\u0C28\u0C40 \u0C2A\u0C47\u0C30\u0C41 ____?", a: ["\u0C0F\u0C2E\u0C3F\u0C1F\u0C3F", "\u0C0E\u0C2A\u0C4D\u0C2A\u0C41\u0C21\u0C41", "\u0C0E\u0C32\u0C3E"], correct: 0 },
+        { q: "\u0C28\u0C41\u0C35\u0C4D\u0C35\u0C41 \u0C2C\u0C21\u0C3F\u0C15\u0C3F ____ \u0C35\u0C46\u0C33\u0C4D\u0C24\u0C3E\u0C35\u0C41?", a: ["\u0C0E\u0C35\u0C30\u0C41", "\u0C0E\u0C2A\u0C4D\u0C2A\u0C41\u0C21\u0C41", "\u0C0F\u0C2E\u0C3F\u0C1F\u0C3F"], correct: 1 },
+        { q: "\u0C06\u0C2F\u0C28 ____?", a: ["\u0C0E\u0C15\u0C4D\u0C15\u0C21", "\u0C0E\u0C35\u0C30\u0C41", "\u0C0E\u0C32\u0C3E"], correct: 1 },
+        { q: "\u0C28\u0C41\u0C35\u0C4D\u0C35\u0C41 ____ \u0C0F\u0C21\u0C41\u0C38\u0C4D\u0C24\u0C41\u0C28\u0C4D\u0C28\u0C3E\u0C35\u0C41?", a: ["\u0C0E\u0C02\u0C26\u0C41\u0C15\u0C41", "\u0C0E\u0C35\u0C30\u0C41", "\u0C0F\u0C2E\u0C3F\u0C1F\u0C3F"], correct: 0 },
+        { q: "\u0C08 \u0C15\u0C32\u0C2E\u0C41 ____?", a: ["\u0C0E\u0C35\u0C30\u0C3F\u0C26\u0C3F", "\u0C0F\u0C2E\u0C3F\u0C1F\u0C3F", "\u0C0E\u0C15\u0C4D\u0C15\u0C21"], correct: 0 },
+        { q: "\u0C2A\u0C30\u0C40\u0C15\u0C4D\u0C37\u0C32\u0C41 ____ \u0C1C\u0C30\u0C41\u0C17\u0C41\u0C24\u0C3E\u0C2F\u0C3F?", a: ["\u0C0E\u0C35\u0C30\u0C41", "\u0C0E\u0C32\u0C3E", "\u0C0F\u0C2E\u0C3F\u0C1F\u0C3F"], correct: 1 },
+        { q: "\u0C28\u0C41\u0C35\u0C4D\u0C35\u0C41 ____ \u0C35\u0C1A\u0C4D\u0C1A\u0C3E\u0C35\u0C41?", a: ["\u0C0E\u0C2A\u0C4D\u0C2A\u0C41\u0C21\u0C41", "\u0C0E\u0C35\u0C30\u0C41", "\u0C0F\u0C2E\u0C3F\u0C1F\u0C3F"], correct: 0 },
+        { q: "\u0C28\u0C40\u0C15\u0C41 ____ \u0C30\u0C02\u0C17\u0C41 \u0C05\u0C02\u0C1F\u0C47 \u0C07\u0C37\u0C4D\u0C1F\u0C02?", a: ["\u0C0E\u0C35\u0C30\u0C41", "\u0C0F", "\u0C0E\u0C32\u0C3E"], correct: 1 },
+        { q: "\u0C06 \u0C2A\u0C28\u0C3F ____ \u0C1A\u0C47\u0C2F\u0C3E\u0C32\u0C3F?", a: ["\u0C0E\u0C15\u0C4D\u0C15\u0C21", "\u0C0E\u0C02\u0C26\u0C41\u0C15\u0C41", "\u0C0E\u0C32\u0C3E"], correct: 2 }
+    ];
+
+    const orderingQuestions = [
+        { ans: "\u0C28\u0C47\u0C28\u0C41 \u0C2A\u0C3E\u0C1F\u0C36\u0C3E\u0C32\u0C15\u0C3F \u0C38\u0C48\u0C15\u0C3F\u0C32\u0C4D \u0C2E\u0C40\u0C26 \u0C35\u0C46\u0C33\u0C4D\u0C24\u0C3E\u0C28\u0C41.", words: ["\u0C28\u0C41\u0C35\u0C4D\u0C35\u0C41", "\u0C2A\u0C3E\u0C1F\u0C36\u0C3E\u0C32\u0C15\u0C3F", "\u0C0E\u0C32\u0C3E", "\u0C35\u0C46\u0C33\u0C4D\u0C24\u0C3E\u0C35\u0C41", "?"], correct: "\u0C28\u0C41\u0C35\u0C4D\u0C35\u0C41 \u0C2A\u0C3E\u0C1F\u0C36\u0C3E\u0C32\u0C15\u0C3F \u0C0E\u0C32\u0C3E \u0C35\u0C46\u0C33\u0C4D\u0C24\u0C3E\u0C35\u0C41?" },
+        { ans: "\u0C05\u0C24\u0C21\u0C41 \u0C39\u0C48\u0C26\u0C30\u0C3E\u0C2C\u0C3E\u0C26\u0C4D\u200C\u0C32\u0C4B \u0C09\u0C02\u0C1F\u0C41\u0C28\u0C4D\u0C28\u0C3E\u0C21\u0C41.", words: ["\u0C05\u0C24\u0C21\u0C41", "\u0C0E\u0C15\u0C4D\u0C15\u0C21", "\u0C09\u0C02\u0C1F\u0C41\u0C28\u0C4D\u0C28\u0C3E\u0C21\u0C41", "?"], correct: "\u0C05\u0C24\u0C21\u0C41 \u0C0E\u0C15\u0C4D\u0C15\u0C21 \u0C09\u0C02\u0C1F\u0C41\u0C28\u0C4D\u0C28\u0C3E\u0C21\u0C41?" },
+        { ans: "\u0C2A\u0C4D\u0C30\u0C47\u0C2E\u0C4D \u0C30\u0C47\u0C2A\u0C41 \u0C35\u0C38\u0C4D\u0C24\u0C3E\u0C21\u0C41.", words: ["\u0C2A\u0C4D\u0C30\u0C47\u0C2E\u0C4D", "\u0C0E\u0C2A\u0C4D\u0C2A\u0C41\u0C21\u0C41", "\u0C35\u0C38\u0C4D\u0C24\u0C3E\u0C21\u0C41", "?"], correct: "\u0C2A\u0C4D\u0C30\u0C47\u0C2E\u0C4D \u0C0E\u0C2A\u0C4D\u0C2A\u0C41\u0C21\u0C41 \u0C35\u0C38\u0C4D\u0C24\u0C3E\u0C21\u0C41?" },
+        { ans: "\u0C08 \u0C2A\u0C41\u0C38\u0C4D\u0C24\u0C15\u0C02 \u0C30\u0C35\u0C3F\u0C26\u0C3F.", words: ["\u0C08", "\u0C2A\u0C41\u0C38\u0C4D\u0C24\u0C15\u0C02", "\u0C0E\u0C35\u0C30\u0C3F\u0C26\u0C3F", "?"], correct: "\u0C08 \u0C2A\u0C41\u0C38\u0C4D\u0C24\u0C15\u0C02 \u0C0E\u0C35\u0C30\u0C3F\u0C26\u0C3F?" },
+        { ans: "\u0C28\u0C3E\u0C15\u0C41 \u0C06\u0C15\u0C32\u0C3F\u0C17\u0C3E \u0C09\u0C02\u0C26\u0C3F \u0C05\u0C02\u0C26\u0C41\u0C15\u0C47 \u0C24\u0C3F\u0C02\u0C1F\u0C41\u0C28\u0C4D\u0C28\u0C3E\u0C28\u0C41.", words: ["\u0C28\u0C41\u0C35\u0C4D\u0C35\u0C41", "\u0C0E\u0C02\u0C26\u0C41\u0C15\u0C41", "\u0C24\u0C3F\u0C02\u0C1F\u0C41\u0C28\u0C4D\u0C28\u0C3E\u0C35\u0C41", "?"], correct: "\u0C28\u0C41\u0C35\u0C4D\u0C35\u0C41 \u0C0E\u0C02\u0C26\u0C41\u0C15\u0C41 \u0C24\u0C3F\u0C02\u0C1F\u0C41\u0C28\u0C4D\u0C28\u0C3E\u0C35\u0C41?" }
+    ];
+
+    let mcqScore = 0;
+    let orderScore = 0;
+
+    function nextStage(n) {
+        // ఇక్కడ వీడియోను ఆపడానికి కోడ్ జతచేయబడింది!
+        if (n === 2) {
+            let iframe = document.getElementById('yt-lesson-video');
+            if (iframe) {
+                iframe.src = iframe.src; // రీలోడ్ చేయడం ద్వారా వీడియో ఆగిపోతుంది
+            }
+        }
+
+        document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+        document.getElementById('stage' + n).classList.add('active');
+        document.getElementById('progress').style.width = (n * 20) + '%';
+        if(n === 3) loadMCQs();
+        if(n === 4) loadOrdering();
+        
+        // పేజీ పైకి స్క్రోల్ అవ్వడానికి
+        document.getElementById('telugu-lesson-app').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function loadMCQs() {
+        let html = '';
+        mcqs.forEach((item, index) => {
+            html += `<div class="quiz-q"><span class="q-label">${index + 1}. ${item.q}</span><div class="options">`;
+            item.a.forEach((opt, i) => {
+                html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`;
+            });
+            html += `</div></div>`;
+        });
+        document.getElementById('mcq-quiz').innerHTML = html;
+    }
+
+    function evaluateMCQ() {
+        mcqScore = 0;
+        mcqs.forEach((item, index) => {
+            const inputs = document.querySelectorAll(`input[name="q${index}"]`);
+            inputs.forEach(inp => inp.disabled = true); 
+
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            const correctInput = document.querySelector(`input[name="q${index}"][value="${item.correct}"]`);
+            
+            if(correctInput) {
+                correctInput.parentElement.style.background = "#e8f5e9";
+                correctInput.parentElement.style.border = "2px solid #4caf50";
+                correctInput.parentElement.style.fontWeight = "bold";
+            }
+
+            if(selected) {
+                if(parseInt(selected.value) === item.correct) {
+                    mcqScore++;
+                } else {
+                    selected.parentElement.style.background = "#ffebee";
+                    selected.parentElement.style.border = "2px solid #f44336";
+                    selected.parentElement.style.fontWeight = "bold";
+                }
+            }
+        });
+        
+        document.getElementById('btn-submit-mcq').style.display = 'none';
+        document.getElementById('btn-next-mcq').style.display = 'block';
+    }
+
+    function loadOrdering() {
+        let html = '';
+        orderingQuestions.forEach((item, index) => {
+            let shuffled = [...item.words].sort(() => Math.random() - 0.5);
+            html += `<div class="scramble-box">
+                <span class="ord-label">${index + 1}. \u0C1C\u0C35\u0C3E\u0C2C\u0C41: ${item.ans}</span>
+                <div class="user-answer" id="user-ans-${index}"></div>
+                <div class="correct-ans-div" id="correct-ans-${index}"></div>
+                <div class="word-bank" id="bank-${index}">`;
+            shuffled.forEach(w => {
+                html += `<span class="word" onclick="addWord(${index}, '${w}', this)">${w}</span>`;
+            });
+            html += `</div><button class="t-btn" style="padding:8px; width:auto; font-size:14px; margin-top:10px;" onclick="resetOrderBox(${index})">\u0C30\u0C3F\u0C38\u0C46\u0C1F\u0C4D</button></div>`;
+        });
+        document.getElementById('order-quiz').innerHTML = html;
+        document.getElementById('btn-submit-ord').style.display = 'block';
+        document.getElementById('btn-retry-ord').style.display = 'none';
+        document.getElementById('btn-next-ord').style.display = 'none';
+    }
+
+    function addWord(qIdx, word, el) {
+        if(el.style.visibility === "hidden") return;
+        const container = document.getElementById('user-ans-' + qIdx);
+        const span = document.createElement('span');
+        span.className = 'word';
+        span.innerText = word;
+        span.style.borderColor = "#4caf50";
+        span.style.color = "#2e7d32";
+        span.onclick = function() {
+            container.removeChild(span);
+            el.style.visibility = "visible";
+        };
+        container.appendChild(span);
+        el.style.visibility = "hidden";
+    }
+
+    function resetOrderBox(idx) {
+        document.getElementById('user-ans-' + idx).innerHTML = '';
+        document.getElementById('user-ans-' + idx).style.backgroundColor = "white";
+        document.getElementById('user-ans-' + idx).style.borderColor = "#ab47bc";
+        document.getElementById('correct-ans-' + idx).style.display = "none";
+        document.querySelectorAll(`#bank-${idx} .word`).forEach(w => w.style.visibility = "visible");
+    }
+
+    function evaluateOrder() {
+        orderScore = 0;
+        document.querySelectorAll('.word-bank .word').forEach(w => w.onclick = null);
+
+        orderingQuestions.forEach((item, index) => {
+            const userAnsBox = document.getElementById(`user-ans-${index}`);
+            const userArr = [];
+            document.querySelectorAll(`#user-ans-${index} .word`).forEach(w => userArr.push(w.innerText));
+            
+            if(userArr.join(' ') === item.correct) {
+                orderScore++;
+                userAnsBox.style.backgroundColor = "#e8f5e9";
+                userAnsBox.style.borderColor = "#4caf50";
+            } else {
+                userAnsBox.style.backgroundColor = "#ffebee";
+                userAnsBox.style.borderColor = "#f44336";
+                let correctDiv = document.getElementById(`correct-ans-${index}`);
+                correctDiv.style.display = 'block';
+                correctDiv.innerText = "\u0C38\u0C30\u0C3F\u0C2F\u0C48\u0C28 \u0C1C\u0C35\u0C3E\u0C2C\u0C41: " + item.correct;
+            }
+        });
+        
+        document.getElementById('btn-submit-ord').style.display = 'none';
+        document.getElementById('btn-retry-ord').style.display = 'block';
+        document.getElementById('btn-next-ord').style.display = 'block';
+    }
+
+    function retryOrder() {
+        loadOrdering();
+        // పేజీ పైకి స్క్రోల్ అవ్వడానికి
+        document.getElementById('telugu-lesson-app').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function showFinal() {
+        document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+        document.getElementById('stage5').classList.add('active');
+        document.getElementById('progress').style.width = '100%';
+
+        // పేజీ పైకి స్క్రోల్ అవ్వడానికి
+        document.getElementById('telugu-lesson-app').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        let totalScore = mcqScore + orderScore;
+        let maxScore = 15;
+        
+        document.getElementById('final-stats').innerHTML = 
+            `\u0C2E\u0C4A\u0C24\u0C4D\u0C24\u0C02 \u0C38\u0C4D\u0C15\u0C4B\u0C30\u0C41: ${totalScore} / ${maxScore}<br>
+            <span style="font-size:18px; color:#555;">(MCQs: ${mcqScore}/10 | Ordering: ${orderScore}/5)</span>`;
+        
+        let percentage = (totalScore / maxScore) * 100;
+        let starCount = 0;
+        
+        if(percentage >= 90) starCount = 5;
+        else if(percentage >= 70) starCount = 4;
+        else if(percentage >= 50) starCount = 3;
+        else if(percentage >= 30) starCount = 2;
+        else starCount = 1;
+
+        let sHtml = '';
+        for(let i=1; i<=5; i++) {
+            sHtml += `<span class="${i <= starCount ? 'star-gold' : 'star-gray'}">★</span>`;
+        }
+   document.getElementById('star-rating').innerHTML = sHtml;
+        
+        const msgs = [
+            "\u0C2E\u0C33\u0C4D\u0C33\u0C40 \u0C2A\u0C4D\u0C30\u0C2F\u0C24\u0C4D\u0C28\u0C3F\u0C02\u0C1A\u0C02\u0C21\u0C3F", // మళ్ళీ ప్రయత్నించండి
+            "\u0C2A\u0C30\u0C4D\u0C35\u0C3E\u0C32\u0C47\u0C26\u0C41", // పర్వాలేదు
+            "\u0C2E\u0C02\u0C1A\u0C3F \u0C2A\u0C4D\u0C30\u0C2F\u0C24\u0C4D\u0C28\u0C02", // మంచి ప్రయత్నం
+            "\u0C1A\u0C3E\u0C32\u0C3E \u0C2C\u0C3E\u0C17\u0C41\u0C02\u0C26\u0C3F", // చాలా బాగుంది
+            "\u0C05\u0C26\u0C4D\u0C2D\u0C41\u0C24\u0C02!" // అద్భుతం!
+        ];
+        document.getElementById('star-msg').textContent = msgs[starCount-1];
+    }
+</script>
+</div>
