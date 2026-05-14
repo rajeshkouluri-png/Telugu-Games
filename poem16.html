@@ -1,0 +1,333 @@
+﻿<div id="telugu-poem-app">
+<style>
+    /* CSS Isolation */
+    #telugu-poem-app { font-family: 'Gautami', 'Mandali', sans-serif; background-color: #ffffff; color: #333; line-height: 1.6; padding: 15px; max-width: 650px; margin: 20px auto; border: 2px solid #e1e4e8; border-radius: 12px; box-sizing: border-box; }
+    #telugu-poem-app * { box-sizing: border-box; }
+    #telugu-poem-app .t-stage { display: none; }
+    #telugu-poem-app .t-active { display: block; }
+    #telugu-poem-app h2 { color: #1a73e8; text-align: center; font-size: 22px; margin-bottom: 15px; border-bottom: 2px solid #eee; }
+    
+    #telugu-poem-app .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    #telugu-poem-app .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+    #telugu-poem-app .t-list { background: #fdfdfd; border: 2px dashed #1a73e8; padding: 10px; border-radius: 8px; min-height: 150px; }
+    #telugu-poem-app .t-line { padding: 12px; margin: 8px 0; border-radius: 8px; border: 2px solid; cursor: move; font-weight: bold; text-align: center; user-select: none; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s, box-shadow 0.2s; font-size: 16px; }
+    #telugu-poem-app .t-line:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    #telugu-poem-app .t-line.dragging { opacity: 0.5; transform: scale(0.95); }
+
+    #telugu-poem-app .quiz-box { padding: 15px; margin-bottom: 15px; border-radius: 12px; border: 2px solid transparent; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    #telugu-poem-app .quiz-box b { font-size: 18px; color: #333; display: block; margin-bottom: 10px; }
+    #telugu-poem-app .opt { display: block; margin: 8px 0; cursor: pointer; padding: 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.7); border: 2px solid rgba(255, 255, 255, 0.9); transition: all 0.2s ease-in-out; font-size: 16px; }
+    #telugu-poem-app .opt:hover { background: #ffffff; border-color: #1a73e8; transform: scale(1.02); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    
+    #telugu-poem-app .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+    #telugu-poem-app .t-btn { flex: 1 1 45%; padding: 12px; background: #1a73e8; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.15); transition: 0.2s; }
+    #telugu-poem-app .t-btn:hover { background: #1557b0; transform: translateY(-2px); }
+    #telugu-poem-app .t-btn-full { width: 100%; flex: 1 1 100%; }
+    
+    #telugu-poem-app .feedback-text { text-align: center; font-weight: bold; margin: 10px 0; font-size: 18px; }
+    #telugu-poem-app .star-gold { color: #fbbc04; font-size: 40px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    #telugu-poem-app .star-gray { color: #dadce0; font-size: 40px; }
+</style>
+
+<div id="t-stage1" class="t-stage t-active">
+    <h2>1. పద్యం మరియు భావం</h2>
+    <div class="video-wrapper">
+        <iframe id="yt-player" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div id="bhavam-container" style="background:#fff9c4; padding:18px; border-radius:10px; margin-top:18px; font-size:18px; line-height:1.8; border: 3px dashed #fbbc04;">
+        <b style="color:#e65100; font-size: 20px;">భావం:</b> <span id="bhavam-text"></span>
+    </div>
+    <button class="t-btn t-btn-full" style="margin-top:20px;" onclick="moveStage(1, 2)">తరువాత దశకు వెళ్ళండి</button>
+</div>
+
+<div id="t-stage2" class="t-stage">
+    <h2>2. పద్య పాదాలను సరిచేయండి (4 మార్కులు)</h2>
+    <p style="font-size:15px; text-align:center; color:#5f6368;">పాదాలను సరైన వరుసలోకి లాగి పెట్టండి.</p>
+    <div id="t-sort-list" class="t-list"></div>
+    <div id="fb-2" class="feedback-text"></div>
+    <button class="t-btn t-btn-full" onclick="checkStep2()">సరిచూసుకోండి</button>
+    <button id="next-to-quiz" class="t-btn t-btn-full" style="display:none; background:#34a853; margin-top:10px;" onclick="moveStage(2, 3)">క్విజ్ ప్రారంభించండి</button>
+</div>
+
+<div id="t-stage3" class="t-stage">
+    <h2>3. క్విజ్ (6 మార్కులు)</h2>
+    <div id="quiz-content"></div>
+    <div id="fb-3" class="feedback-text"></div>
+    <div class="btn-group">
+        <button id="btn-submit-quiz" class="t-btn t-btn-full" onclick="checkStep3()">సబ్మిట్ చేయండి</button>
+        <button id="btn-retry-quiz" class="t-btn" style="display:none; background:#ea4335;" onclick="retryQuiz()">మళ్ళీ ప్రయత్నించండి</button>
+        <button id="btn-show-ans" class="t-btn" style="display:none; background:#fbbc04; color:#000;" onclick="showAnswers()">సమాధానాలు</button>
+        <button id="btn-go-rating" class="t-btn t-btn-full" style="display:none; background:#34a853;" onclick="showFinal()">ఫలితాలు చూడండి</button>
+    </div>
+</div>
+
+<div id="t-stage4" class="t-stage" style="text-align:center;">
+    <h2>మీ ఫలితాలు</h2>
+    <div id="final-stats" style="font-size:24px; font-weight:bold; margin:15px 0; color:#1a73e8;"></div>
+    <div id="star-rating"></div>
+    <p id="star-msg" style="color:#34a853; font-weight:bold; font-size:22px; margin-top:10px;"></p>
+    <button class="t-btn t-btn-full" style="margin-top:20px;" onclick="location.reload()">మళ్ళీ మొదటి నుండి</button>
+</div>
+
+<script>
+    const poemData = {
+        videoID: "LSMIqY640g0",
+        
+        // ప్రశ్నకు జవాబులు వెతకడం ద్వారానే ఈ లోకంలో జ్ఞానం వృద్ధి చెందుతుంది. ప్రశ్నించడం వల్లనే సమాజంలో మనిషి విలువ పెరుగుతుంది. ప్రశ్న లేకపోతే ప్రగతి శూన్యం అవుతుంది.
+        bhavam: "\u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28\u0C15\u0C41 \u0C1C\u0C35\u0C3E\u0C2C\u0C41\u0C32\u0C41 \u0C35\u0C46\u0C24\u0C15\u0C21\u0C02 \u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C3E\u0C28\u0C47 \u0C08 \u0C32\u0C4B\u0C15\u0C02\u0C32\u0C4B \u0C1C\u0C4D\u0C1E\u0C3E\u0C28\u0C02 \u0C35\u0C43\u0C26\u0C4D\u0C27\u0C3F \u0C1A\u0C46\u0C02\u0C26\u0C41\u0C24\u0C41\u0C02\u0C26\u0C3F. \u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28\u0C3F\u0C02\u0C1A\u0C21\u0C02 \u0C35\u0C32\u0C4D\u0C32\u0C28\u0C47 \u0C38\u0C2E\u0C3E\u0C1C\u0C02\u0C32\u0C4B \u0C2E\u0C28\u0C3F\u0C37\u0C3F \u0C35\u0C3F\u0C32\u0C41\u0C35 \u0C2A\u0C46\u0C30\u0C41\u0C17\u0C41\u0C24\u0C41\u0C02\u0C26\u0C3F. \u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28 \u0C32\u0C47\u0C15\u0C2A\u0C4B\u0C24\u0C47 \u0C2A\u0C4D\u0C30\u0C17\u0C24\u0C3F \u0C36\u0C42\u0C28\u0C4D\u0C2F\u0C02 \u0C05\u0C35\u0C41\u0C24\u0C41\u0C02\u0C26\u0C3F.",
+
+        poemLines: [
+            "\u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28 \u0C28\u0C41\u0C02\u0C21\u0C3F \u0C2A\u0C41\u0C1F\u0C4D\u0C1F\u0C41 \u0C2A\u0C30\u0C3F\u0C23\u0C24\u0C3F \u0C1C\u0C4D\u0C1E\u0C3E\u0C28\u0C2E\u0C4D\u0C2E\u0C41", // ప్రశ్న నుండి పుట్టు పరిణతి జ్ఞానమ్ము
+            "\u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28\u0C24\u0C4B\u0C21 \u0C2A\u0C46\u0C30\u0C41\u0C17\u0C41 \u0C2A\u0C4D\u0C30\u0C3E\u0C2D\u0C35\u0C2E\u0C4D\u0C2E\u0C41", // ప్రశ్నతోడ పెరుగు ప్రాభవమ్ము
+            "\u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28\u0C32\u0C47\u0C15 \u0C2A\u0C4D\u0C30\u0C17\u0C24\u0C3F \u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28\u0C3E\u0C30\u0C4D\u0C25\u0C15\u0C2E\u0C4D\u0C2E\u0C41\u0C30\u0C3E!", // ప్రశ్నలేక ప్రగతి ప్రశ్నార్థకమ్మురా!
+            "\u0C28\u0C35\u0C2F\u0C41\u0C17\u0C3E\u0C32\u0C2C\u0C3E\u0C1F \u0C28\u0C3E\u0C30\u0C4D\u0C32\u0C2E\u0C3E\u0C1F" // నవయుగాలబాట నార్లమాట
+        ],
+
+        quizData: [
+            { 
+                q: "\u0C08 \u0C2A\u0C26\u0C4D\u0C2F\u0C3E\u0C28\u0C4D\u0C28\u0C3F \u0C0E\u0C35\u0C30\u0C41 \u0C30\u0C3E\u0C36\u0C3E\u0C30\u0C41?", // ఈ పద్యాన్ని ఎవరు రాశారు?
+                o: ["\u0C28\u0C3E\u0C30\u0C4D\u0C32 \u0C35\u0C46\u0C02\u0C15\u0C1F\u0C47\u0C36\u0C4D\u0C35\u0C30\u0C30\u0C3E\u0C35\u0C41", "\u0C28\u0C3E\u0C30\u0C4D\u0C32 \u0C1A\u0C3F\u0C30\u0C02\u0C1C\u0C40\u0C35\u0C3F", "\u0C35\u0C47\u0C2E\u0C28"], 
+                a: "\u0C28\u0C3E\u0C30\u0C4D\u0C32 \u0C35\u0C46\u0C02\u0C15\u0C1F\u0C47\u0C36\u0C4D\u0C35\u0C30\u0C30\u0C3E\u0C35\u0C41" // నార్ల వెంకటేశ్వరరావు
+            },
+            { 
+                q: "\u0C26\u0C47\u0C28\u0C3F \u0C26\u0C4D\u0C35\u0C3E\u0C30\u0C3E \u0C32\u0C4B\u0C15\u0C02\u0C32\u0C4B \u0C1C\u0C4D\u0C1E\u0C3E\u0C28\u0C02 \u0C35\u0C43\u0C26\u0C4D\u0C27\u0C3F \u0C1A\u0C46\u0C02\u0C26\u0C41\u0C24\u0C41\u0C02\u0C26\u0C3F?", // దేని ద్వారా లోకంలో జ్ఞానం వృద్ధి చెందుతుంది?
+                o: ["\u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28\u0C15\u0C41 \u0C1C\u0C35\u0C3E\u0C2C\u0C41\u0C32\u0C41 \u0C35\u0C46\u0C24\u0C15\u0C21\u0C02", "\u0C28\u0C3F\u0C26\u0C4D\u0C30\u0C2A\u0C4B\u0C35\u0C21\u0C02", "\u0C2E\u0C4C\u0C28\u0C02\u0C17\u0C3E \u0C09\u0C02\u0C21\u0C1F\u0C02"], 
+                a: "\u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28\u0C15\u0C41 \u0C1C\u0C35\u0C3E\u0C2C\u0C41\u0C32\u0C41 \u0C35\u0C46\u0C24\u0C15\u0C21\u0C02" // ప్రశ్నకు జవాబులు వెతకడం
+            },
+            { 
+                q: "\u0C38\u0C2E\u0C3E\u0C1C\u0C02\u0C32\u0C4B \u0C2E\u0C28\u0C3F\u0C37\u0C3F \u0C35\u0C3F\u0C32\u0C41\u0C35 \u0C26\u0C47\u0C28\u0C3F \u0C35\u0C32\u0C4D\u0C32 \u0C2A\u0C46\u0C30\u0C41\u0C17\u0C41\u0C24\u0C41\u0C02\u0C26\u0C3F?", // సమాజంలో మనిషి విలువ దేని వల్ల పెరుగుతుంది?
+                o: ["\u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28\u0C3F\u0C02\u0C1A\u0C21\u0C02", "\u0C2D\u0C2F\u0C2A\u0C21\u0C1F\u0C02", "\u0C15\u0C4B\u0C2A\u0C17\u0C3F\u0C02\u0C1A\u0C21\u0C02"], 
+                a: "\u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28\u0C3F\u0C02\u0C1A\u0C21\u0C02" // ప్రశ్నించడం
+            },
+            { 
+                q: "\u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28 \u0C32\u0C47\u0C15\u0C2A\u0C4B\u0C24\u0C47 \u0C0F\u0C2E\u0C35\u0C41\u0C24\u0C41\u0C02\u0C26\u0C3F?", // ప్రశ్న లేకపోతే ఏమవుతుంది?
+                o: ["\u0C2A\u0C4D\u0C30\u0C17\u0C24\u0C3F \u0C36\u0C42\u0C28\u0C4D\u0C2F\u0C02 \u0C05\u0C35\u0C41\u0C24\u0C41\u0C02\u0C26\u0C3F", "\u0C1C\u0C4D\u0C1E\u0C3E\u0C28\u0C02 \u0C2A\u0C46\u0C30\u0C41\u0C17\u0C41\u0C24\u0C41\u0C02\u0C26\u0C3F", "\u0C21\u0C2C\u0C4D\u0C2C\u0C41 \u0C35\u0C38\u0C4D\u0C24\u0C41\u0C02\u0C26\u0C3F"], 
+                a: "\u0C2A\u0C4D\u0C30\u0C17\u0C24\u0C3F \u0C36\u0C42\u0C28\u0C4D\u0C2F\u0C02 \u0C05\u0C35\u0C41\u0C24\u0C41\u0C02\u0C26\u0C3F" // ప్రగతి శూన్యం అవుతుంది
+            },
+            { 
+                q: "\u0C2A\u0C26\u0C4D\u0C2F\u0C02 \u0C2A\u0C4D\u0C30\u0C15\u0C3E\u0C30\u0C02 \u0C0F\u0C26\u0C3F \u0C2A\u0C4D\u0C30\u0C17\u0C24\u0C3F\u0C15\u0C3F \u0C2E\u0C42\u0C32\u0C02?", // పద్యం ప్రకారం ఏది ప్రగతికి మూలం?
+                o: ["\u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28", "\u0C05\u0C2C\u0C26\u0C4D\u0C27\u0C02", "\u0C2C\u0C26\u0C4D\u0C27\u0C15\u0C02"], 
+                a: "\u0C2A\u0C4D\u0C30\u0C36\u0C4D\u0C28" // ప్రశ్న
+            },
+            { 
+                q: "'\u0C1C\u0C4D\u0C1E\u0C3E\u0C28\u0C2E\u0C4D\u0C2E\u0C41' \u0C05\u0C28\u0C17\u0C3E \u0C05\u0C30\u0C4D\u0C25\u0C02 \u0C0F\u0C2E\u0C3F\u0C1F\u0C3F?", // 'జ్ఞానమ్ము' అనగా అర్థం ఏమిటి?
+                o: ["\u0C24\u0C46\u0C32\u0C3F\u0C35\u0C3F", "\u0C05\u0C1C\u0C4D\u0C1E\u0C3E\u0C28\u0C02", "\u0C2D\u0C2F\u0C02"], 
+                a: "\u0C24\u0C46\u0C32\u0C3F\u0C35\u0C3F" // తెలివి
+            }
+        ]
+    };
+
+    let s2Score = 0; let s3Score = 0; let s2Errors = 0; let s3Errors = 0;
+    let currentQuizData = [];
+
+    document.getElementById('yt-player').src = "https://www.youtube.com/embed/" + poemData.videoID + "?enablejsapi=1";
+    document.getElementById('bhavam-text').textContent = poemData.bhavam;
+
+    function shuffleArray(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
+    function moveStage(hide, show) {
+        if(hide === 1) {
+            let iframe = document.getElementById('yt-player');
+            iframe.src = iframe.src;
+        }
+        document.getElementById('t-stage' + hide).classList.remove('t-active');
+        document.getElementById('t-stage' + show).classList.add('t-active');
+        if(show === 2) loadDragDrop();
+        if(show === 3) loadQuiz();
+    }
+
+    function loadDragDrop() {
+        const list = document.getElementById('t-sort-list');
+        list.innerHTML = '';
+        
+        let shuffled = shuffleArray([...poemData.poemLines]);
+        const lineColors = ['#e3f2fd', '#e8f5e9', '#fff3e0', '#fce4ec'];
+        const lineBorders = ['#90caf9', '#a5d6a7', '#ffcc80', '#f48fb1'];
+
+        shuffled.forEach((txt, index) => {
+            const div = document.createElement('div');
+            div.className = 't-line';
+            div.draggable = true;
+            div.textContent = txt;
+            div.dataset.val = txt;
+            div.style.backgroundColor = lineColors[index % lineColors.length];
+            div.style.borderColor = lineBorders[index % lineBorders.length];
+
+            div.addEventListener('dragstart', () => div.classList.add('dragging'));
+            div.addEventListener('dragend', () => div.classList.remove('dragging'));
+            list.appendChild(div);
+        });
+
+        list.addEventListener('dragover', e => {
+            e.preventDefault();
+            const dragging = document.querySelector('.dragging');
+            const afterElement = getAfterElement(list, e.clientY);
+            if (afterElement == null) list.appendChild(dragging);
+            else list.insertBefore(dragging, afterElement);
+        });
+    }
+
+    function getAfterElement(container, y) {
+        const elements = [...container.querySelectorAll('.t-line:not(.dragging)')];
+        return elements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) return { offset: offset, element: child };
+            else return closest;
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function checkStep2() {
+        const current = [...document.querySelectorAll('.t-line')].map(d => d.textContent);
+        const fb = document.getElementById('fb-2');
+        if (JSON.stringify(current) === JSON.stringify(poemData.poemLines)) {
+            s2Score = 4;
+            fb.style.color = "#0f9d58";
+            fb.textContent = "\u0C1A\u0C3E\u0C32\u0C3E \u0C2C\u0C3E\u0C17\u0C41\u0C02\u0C26\u0C3F! 4 \u0C2E\u0C3E\u0C30\u0C4D\u0C15\u0C41\u0C32\u0C41 \u0C32\u0C2D\u0C3F\u0C02\u0C1A\u0C3E\u0C2F\u0C3F."; 
+            document.getElementById('next-to-quiz').style.display = 'block';
+        } else {
+            s2Errors++;
+            fb.style.color = "#ea4335";
+            fb.textContent = "\u0C24\u0C2A\u0C4D\u0C2A\u0C41! \u0C12\u0C15\u0C38\u0C3E\u0C30\u0C3F \u0C38\u0C30\u0C3F\u0C1A\u0C42\u0C38\u0C41\u0C15\u0C4B\u0C02\u0C21\u0C3F.";
+        }
+    }
+
+    function loadQuiz() {
+        const cont = document.getElementById('quiz-content');
+        cont.innerHTML = '';
+        
+        currentQuizData = shuffleArray([...poemData.quizData]).map(item => ({
+            q: item.q,
+            o: shuffleArray([...item.o]),
+            a: item.a
+        }));
+        
+        const boxColors = ['#e3f2fd', '#e8f5e9', '#fff3e0', '#fce4ec', '#f3e5f5', '#fff9c4'];
+        const borderColors = ['#90caf9', '#a5d6a7', '#ffcc80', '#f48fb1', '#ce93d8', '#fff59d'];
+
+        currentQuizData.forEach((d, i) => {
+            let bgColor = boxColors[i % boxColors.length];
+            let bdColor = borderColors[i % borderColors.length];
+            
+            let h = `<div class="quiz-box" style="background:${bgColor}; border-color:${bdColor};"><b>${i + 1}. ${d.q}</b>`;
+            d.o.forEach((opt, oi) => {
+                h += `<label class="opt"><input type="radio" name="q${i}" value="${oi}"> ${opt}</label>`;
+            });
+            h += `</div>`;
+            cont.innerHTML += h;
+        });
+    }
+
+    function checkStep3() {
+        s3Score = 0; s3Errors = 0;
+        
+        currentQuizData.forEach((d, i) => {
+            const inputs = document.querySelectorAll(`input[name="q${i}"]`);
+            const sel = document.querySelector(`input[name="q${i}"]:checked`);
+            
+            inputs.forEach(inp => inp.disabled = true);
+
+            if(sel) {
+                const selectedText = d.o[parseInt(sel.value)]; 
+                if(selectedText === d.a) {
+                    s3Score++;
+                    sel.parentElement.style.color = "#0f9d58";
+                    sel.parentElement.style.borderColor = "#0f9d58";
+                    sel.parentElement.style.fontWeight = "bold";
+                } else {
+                    s3Errors++;
+                    sel.parentElement.style.color = "#ea4335";
+                    sel.parentElement.style.borderColor = "#ea4335";
+                    sel.parentElement.style.fontWeight = "bold";
+                }
+            } else { s3Errors++; }
+        });
+
+        const fb = document.getElementById('fb-3');
+        fb.textContent = "\u0C2E\u0C40\u0C15\u0C41 " + s3Score + " / " + poemData.quizData.length + " \u0C2E\u0C3E\u0C30\u0C4D\u0C15\u0C41\u0C32\u0C41 \u0C35\u0C1A\u0C4D\u0C1A\u0C3E\u0C2F\u0C3F.";
+        fb.style.color = "#1a73e8";
+
+        document.getElementById('btn-submit-quiz').style.display = 'none';
+        document.getElementById('btn-retry-quiz').style.display = 'block';
+        document.getElementById('btn-show-ans').style.display = 'block';
+        document.getElementById('btn-go-rating').style.display = 'block';
+    }
+
+    function retryQuiz() {
+        currentQuizData.forEach((d, i) => {
+            const inputs = document.querySelectorAll(`input[name="q${i}"]`);
+            inputs.forEach(inp => {
+                inp.disabled = false; inp.checked = false;
+                inp.parentElement.style.color = "";
+                inp.parentElement.style.fontWeight = "normal";
+                inp.parentElement.style.background = ""; 
+                inp.parentElement.style.borderColor = "rgba(255, 255, 255, 0.9)";
+            });
+        });
+        document.getElementById('fb-3').textContent = "";
+        document.getElementById('btn-submit-quiz').style.display = 'block';
+        document.getElementById('btn-retry-quiz').style.display = 'none';
+        document.getElementById('btn-show-ans').style.display = 'none';
+        document.getElementById('btn-go-rating').style.display = 'none';
+    }
+
+    function showAnswers() {
+        currentQuizData.forEach((d, i) => {
+            const correctIndex = d.o.indexOf(d.a); 
+            const correctInput = document.querySelector(`input[name="q${i}"][value="${correctIndex}"]`);
+            if(correctInput) {
+                correctInput.parentElement.style.color = "#0f9d58";
+                correctInput.parentElement.style.fontWeight = "bold";
+                correctInput.parentElement.style.background = "#e6f4ea";
+                correctInput.parentElement.style.borderColor = "#0f9d58";
+            }
+        });
+    }
+
+    function showFinal() {
+        document.getElementById('t-stage3').classList.remove('t-active');
+        document.getElementById('t-stage4').classList.add('t-active');
+        
+        let totalScore = s2Score + s3Score;
+        let maxScore = 4 + poemData.quizData.length;
+        
+        document.getElementById('final-stats').textContent = "\u0C2E\u0C4A\u0C24\u0C4D\u0C24\u0C02 \u0C2E\u0C3E\u0C30\u0C4D\u0C15\u0C41\u0C32\u0C41: " + totalScore + " / " + maxScore;
+        
+        let percentage = (totalScore / maxScore) * 100;
+        let starCount = 0;
+        
+        if(percentage >= 90 && s2Errors === 0) starCount = 5;
+        else if(percentage >= 70) starCount = 4;
+        else if(percentage >= 50) starCount = 3;
+        else if(percentage >= 30) starCount = 2;
+        else starCount = 1;
+
+        if(s2Errors > 2 || s3Errors > 3) starCount = Math.max(1, starCount - 1);
+
+        let sHtml = '';
+        for(let i=1; i<=5; i++) {
+            sHtml += `<span class="${i <= starCount ? 'star-gold' : 'star-gray'}">★</span>`;
+        }
+        document.getElementById('star-rating').innerHTML = sHtml;
+        
+        const msgs = [
+            "\u0C2E\u0C33\u0C4D\u0C33\u0C40 \u0C2A\u0C4D\u0C30\u0C2F\u0C24\u0C4D\u0C28\u0C3F\u0C02\u0C1A\u0C02\u0C21\u0C3F", 
+            "\u0C2A\u0C30\u0C4D\u0C35\u0C3E\u0C32\u0C47\u0C26\u0C41", 
+            "\u0C2E\u0C02\u0C1A\u0C3F \u0C2A\u0C4D\u0C30\u0C2F\u0C24\u0C4D\u0C28\u0C02", 
+            "\u0C1A\u0C3E\u0C32\u0C3E \u0C2C\u0C3E\u0C17\u0C41\u0C02\u0C26\u0C3F", 
+            "\u0C05\u0C26\u0C4D\u0C2D\u0C41\u0C24\u0C02!"
+        ];
+        document.getElementById('star-msg').textContent = msgs[starCount-1];
+    }
+</script>
+</div>
+ 
