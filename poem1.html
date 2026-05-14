@@ -672,7 +672,7 @@
         }
         document.getElementById('star-rating').innerHTML = sHtml;
         
-        const msgs = [
+        cconst msgs = [
             "\u0C2E\u0C33\u0C4D\u0C33\u0C40 \u0C2A\u0C4D\u0C30\u0C2F\u0C24\u0C4D\u0C28\u0C3F\u0C02\u0C1A\u0C02\u0C21\u0C3F", 
             "\u0C2A\u0C30\u0C4D\u0C35\u0C3E\u0C32\u0C47\u0C26\u0C41", 
             "\u0C2E\u0C02\u0C1A\u0C3F \u0C2A\u0C4D\u0C30\u0C2F\u0C24\u0C4D\u0C28\u0C02", 
@@ -680,7 +680,9 @@
             "\u0C05\u0C26\u0C4D\u0C2D\u0C41\u0C24\u0C02!"
         ];
         document.getElementById('star-msg').textContent = msgs[starCount-1];
-        window.top.postMessage({ type: "autoSavePoemScore", stars: starCount }, "*");
+        
+        // గమనిక: window.parent వాడటం వల్ల మెయిన్ హబ్ కి సిగ్నల్ కరెక్ట్ గా వెళుతుంది
+        window.parent.postMessage({ type: "autoSavePoemScore", stars: starCount }, "*");
     }
 </script>
 </div>
