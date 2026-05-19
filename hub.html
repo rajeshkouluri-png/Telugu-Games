@@ -28,13 +28,15 @@
   #splash-screen img {
     width: 100%;
     height: 100%;
-    object-fit: cover; 
+    /* ఇక్కడే cover కి బదులు contain పెట్టాము. దీనివల్ల బొమ్మ అస్సలు కట్ అవ్వదు */
+    object-fit: contain; 
     animation: fadeInPoster 1.5s ease-in-out; 
   }
 
+  /* జూమ్ మొత్తం తీసేసాను, కేవలం మెల్లగా కనిపిస్తుంది (Fade In) */
   @keyframes fadeInPoster {
-    0% { opacity: 0; transform: scale(1.02); }
-    100% { opacity: 1; transform: scale(1); }
+    0% { opacity: 0; }
+    100% { opacity: 1; }
   }
 
   /* లాగిన్ పేజీ చుట్టూ చాలా లేత రంగు (Very Light Pastel Candy) */
