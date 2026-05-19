@@ -4,11 +4,43 @@
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"></meta>
 <title>FLN Telugu Mastery: పాఠాలు, పద్యాలు & వ్యాకరణం</title>
 <style>
-  body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f3; }
-  .game-container { max-width: 900px; margin: 20px auto; text-align: center; background: #eef2f3; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+  /* కొత్త కలర్ ఫుల్ డిజైన్ */
+  /* బయట బ్యాక్ గ్రౌండ్ */
+  body { 
+    margin: 0; padding: 0; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%); 
+    min-height: 100vh;
+  }
+
+ /* బయట బ్యాక్ గ్రౌండ్ (స్కై బ్లూ & పర్పుల్) */
+ body { 
+    margin: 0; padding: 0; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%); 
+    min-height: 100vh;
+  }
+
+  /* లాగిన్ పేజీ చుట్టూ చాలా లేత రంగు (Very Light Pastel Candy) */
+  .game-container { 
+    max-width: 600px; margin: 20px auto; text-align: center; 
+    /* ఇక్కడ చాలా లేత పింక్ మరియు లేత లావెండర్ (దాదాపు వైట్) వాడాము */
+    background: linear-gradient(135deg, #fff3f8 0%, #f4f0ff 100%); 
+    padding: 30px; border-radius: 30px; 
+    /* సాఫ్ట్ షాడో */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    border: 5px solid #ffffff; 
+  }
+
+  #login-screen { padding: 20px; background: transparent; }
   
-  #login-screen { padding: 40px 20px; background: #fff; border-radius: 12px; }
-  #login-screen h2 { color: #2c3e50; font-size: 32px; margin-bottom: 10px; }
+  /* టైటిల్ కలర్ డార్క్ పర్పుల్ గా మార్చాను, బాగా హైలైట్ అవుతుంది */
+  #login-screen h2 { 
+    color: #8e44ad; 
+    font-size: 38px; 
+    margin-bottom: 20px; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1); 
+  }
   .author-bio { background: #f8f9fa; border-left: 5px solid #3498db; padding: 15px; margin: 0 auto 25px auto; border-radius: 8px; font-size: 15px; color: #34495e; text-align: left; max-width: 450px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
   .author-name { font-weight: bold; color: #e67e22; font-size: 18px; display: block; margin-bottom: 5px;}
   .author-creds { font-size: 13px; color: #7f8c8d; font-weight: bold; display: block; margin-bottom: 8px;}
@@ -104,19 +136,22 @@
   <div id="loading">Connecting to Database... ⏳</div>
   
   <div id="login-screen">
-    <h2>FLN Telugu Mastery 🎮</h2>
-    <div class="author-bio">
-      <span class="author-name">👨‍🏫 రూపొందించినవారు: Rajesh Kouluri</span>
-      <span class="author-creds">NCERT Resource Person | Textbook Writer | National Award Finalist</span>
-      15+ సంవత్సరాల బోధనా అనుభవంతో, FLN లక్ష్యాలను సాధించడానికి ప్రాథమిక స్థాయి పిల్లల కోసం ప్రత్యేకంగా డిజైన్ చేయబడింది.
+    <h2 style="font-family: 'Comic Sans MS', cursive;">Hello Dhriti! 🎮</h2>
+    <div class="author-bio" style="border: 2px dashed #3498db; background: #fff;">
+      <span class="author-name" style="color: #27ae60;">👨‍🏫 రూపొందించినవారు: Rajesh Kouluri</span>
+      <span class="author-creds">NCERT Resource Person | National Award Finalist</span>
+      చిట్టి చిట్టి అడుగులతో... తెలుగు నేర్చుకుందాం రండి!
     </div>
+    
     <div class="tab-container">
       <button class="tab-btn active" id="tab-new" onclick="switchTab('new')">New Student</button>
       <button class="tab-btn" id="tab-enrolled" onclick="switchTab('enrolled')">Already Enrolled</button>
     </div>
-    <input autocomplete="off" class="student-input" id="studentNameInput" placeholder="Enter Your Name" type="text" /><br />
-    <input autocomplete="off" class="student-input" id="schoolNameInput" placeholder="Enter Your School Name" type="text" /><br />
-    <button class="btn-play" onclick="handleAuth()">PLAY NOW</button>
+    
+    <input autocomplete="off" class="student-input" id="studentNameInput" placeholder="Enter Your Name" type="text" style="border-radius: 20px;" /><br />
+    <input autocomplete="off" class="student-input" id="schoolNameInput" placeholder="Enter Your School Name" type="text" style="border-radius: 20px;" /><br />
+    
+    <button class="btn-play" onclick="handleAuth()" style="border-radius: 25px; padding: 15px 60px;">PLAY NOW</button>
   </div>
 
   <div id="subject-selection-screen">
