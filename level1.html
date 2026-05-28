@@ -39,7 +39,7 @@
 
     <div class="stage" id="stage2">
         <h3>Step 2: Identify the Letter</h3>
-        <p>Listen carefully and click the letter</p>
+        <p>Listen carefully and click the letter <button onclick="replayAudio()" style="background:none; border:none; font-size:24px; cursor:pointer; outline:none;" title="Play Sound">🔊</button></p>
         <div class="tile-grid" id="id-grid"></div>
         <div class="feedback-box" id="stage2-feedback">
             <h3 style="color: #27ae60;">Well Done!</h3>
@@ -116,13 +116,29 @@
         });
     };
 
+    // ఇక్కడే మ్యాజిక్ జరిగింది! కోడ్ క్రాష్ అవ్వకుండా సేఫ్టీ లాజిక్ యాడ్ చేశాను.
     function speak(txt) {
-        window.speechSynthesis.cancel();
-        setTimeout(() => {
-            const u = new SpeechSynthesisUtterance(txt);
-            u.lang = 'te-IN'; u.rate = 0.7;
-            window.speechSynthesis.speak(u);
-        }, 50);
+        try {
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+                setTimeout(() => {
+                    try {
+                        const u = new SpeechSynthesisUtterance(txt);
+                        u.lang = 'te-IN'; u.rate = 0.7;
+                        window.speechSynthesis.speak(u);
+                    } catch(e) { console.log("Audio block prevented crash", e); }
+                }, 50);
+            }
+        } catch (error) {
+            console.log("Audio not supported in this view.", error);
+        }
+    }
+
+    // ఆ స్పీకర్ బొమ్మ నొక్కితే సౌండ్ రావడానికి ఈ చిన్న ఫంక్షన్ యాడ్ చేశాను.
+    function replayAudio() {
+        if (qIdx < targetSet.length) {
+            speak(targetSet[qIdx]);
+        }
     }
 
     function startLearning() {
