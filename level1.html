@@ -252,3 +252,92 @@ window.top.postMessage({ type: "autoSaveScore", stars: rating }, "*");
 </script>
 </body>
 </html>
+        [...CONFIG.stage2Letters].sort(() => Math.random() - 0.5).forEach(l => {
+            const t = document.createElement('div');
+            t.className = 'tile'; t.innerText = l;
+            t.onclick = () => {
+                totalAttempts++;
+                if(l === target) { qIdx++; loadId(); }
+                else { speak(target); }
+            };
+            grid.appendChild(t);
+        });
+    }
+
+    function loadScramble() {
+        if(wordIdx >= wordData.length) {
+            document.getElementById('stage3-feedback').style.display = 'block';
+            return;
+        }
+        const d = wordData[wordIdx];
+        document.getElementById('image-container').innerHTML = `<img src="${d.img}" class="word-img" alt="${d.w}">`;
+        const area = document.getElementById('drop-area'); area.innerHTML = '';
+        d.l.forEach(() => {
+            const z = document.createElement('div');
+            z.className = 'drop-zone';
+            z.onclick = function() { this.innerText = ""; };
+            area.appendChild(z);
+        });
+        const grid = document.getElementById('scrambled-letters'); grid.innerHTML = '';
+        [...d.l].sort(() => Math.random() - 0.5).forEach(l => {
+            const t = document.createElement('div');
+            t.className = 'tile'; t.innerText = l;
+            t.onclick = () => {
+                totalAttempts++;
+                const zones = document.querySelectorAll('#drop-area .drop-zone');
+                for(let z of zones) { if(!z.innerText) { z.innerText = l; break; } }
+                let current = "";
+                zones.forEach(z => current += z.innerText);
+                if(current === d.w) { wordIdx++; setTimeout(loadScramble, 800); }
+            };
+            grid.appendChild(t);
+        });
+    }
+
+    function selectBlank(n) {
+        activeBlank = n;
+        document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('selected-blank'));
+        document.getElementById('b'+n).classList.add('selected-blank');
+    }
+
+    function fillSelected(l) {
+        if(activeBlank) {
+            totalAttempts++;
+            document.getElementById('b'+activeBlank).innerText = l;
+            document.getElementById('b'+activeBlank).classList.remove('wrong');
+        }
+    }
+
+    function checkStage4() {
+        let allCorrect = true;
+        for(let k in CONFIG.stage4Answers) {
+            const el = document.getElementById(k);
+            if(el.innerText === CONFIG.stage4Answers[k]) el.className = 'drop-zone correct';
+            else { el.className = 'drop-zone wrong'; allCorrect = false; }
+        }
+        if(allCorrect) {
+            document.getElementById('check-btn').style.display = 'none';
+            document.getElementById('final-btn').style.display = 'inline-block';
+        }
+    }
+
+    function showFinalScore() {
+        document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+        document.getElementById('finish').classList.add('active');
+        
+        // Calculate the stars
+        let rating = (totalAttempts <= 30) ? 5 : (totalAttempts <= 35) ? 4 : (totalAttempts <= 40) ? 3 : (totalAttempts <= 45) ? 2 : 1;
+        let msgs = ["", "Try Again!", "Keep Practicing!", "Good Effort!", "Great Job!", "Perfect Mastery!"];
+        let stars = "";
+        for (let i = 1; i <= 5; i++) stars += (i <= rating) ? '<span class="star-filled">\u2605</span>' : '<span class="star-empty">\u2606</span>';
+        
+        // Display the feedback to the student
+        document.getElementById('star-display').innerHTML = stars;
+        document.getElementById('final-eval-text').innerText = msgs[rating];
+
+       // Changed window.parent to window.top
+window.top.postMessage({ type: "autoSaveScore", stars: rating }, "*");
+    }
+</script>
+</body>
+</html>
