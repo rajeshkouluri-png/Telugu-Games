@@ -1,10 +1,10 @@
 <html lang="te">
 <head>
-    <meta charset="UTF-8"></meta>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"></meta>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"></meta>
+    <meta charset="UTF-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>పాఠం -2 అభ్యాసన దీపిక</title>
-    <link href="https://fonts.googleapis.com/css2?family=Ramabhadra&display=swap" rel="stylesheet"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Ramabhadra&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Ramabhadra', sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 10px; }
         #lms-container { max-width: 600px; margin: 20px auto; border: 3px solid #2980b9; padding: 25px; border-radius: 20px; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
@@ -81,23 +81,23 @@
 
 <script>
     /* ==========================================
-       LESSON CONFIGURATION (Update this part only)
+       LESSON CONFIGURATION 
        ========================================== */
     const CONFIG = {
         videoID: "sJsGCZmhFgM",
-        stage2Letters: ['ప', 'ల', 'క',],
-        stage4Letters: ['ల', 'క', 'ప',],
-        stage4Answers: { b1:'క', b2:'ప', b3:'ల', }
+        stage2Letters: ['ప', 'ల', 'క'],
+        stage4Letters: ['ల', 'క', 'ప'],
+        stage4Answers: { b1:'క', b2:'ప', b3:'ల' }
     };
 
     const wordData = [
         {w: 'పలక', l: ['ప', 'ల', 'క'], img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhe20b_2kSQ0HeK_yvzJD7Km4YmM3Du8tr5MfQMFLim4SeUlP-XYCacNKDnbqyfSUPurCw7Q8yRBsRx9Pspw1WixBcZafJw1Qglj2N_7Z_F7iP_ZNVcykBLP7CWv3WF2JzAiNS1BAl--emLSNegdByktTno-z7sYtcspmzT1pllaVY-eqJ9RnRA7VUC3th9'},
         {w: 'కల',  l: ['క', 'ల'],      img: 'https://blogger.googleusercontent.com/img/a/AVvXsEgfbJtaRKcSWNny4QOYxvu_YfWYXPokxuDolgJPUCd6XdEhDRtrfZxhXGslG0DHwxePiQI0H95cipKIS5PLZl8HXv01M769uT0xs_8A16RX2D5pG_bhb56R_pCu3OITfGDNmNbCnvOdNB6NHGQXImb2Ozrv8E-IdEXT1dzQn50zAQPXEBIqPufydO57RDny'},
-        {w: 'కలప', l: ['క', 'ల', 'ప'], img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhAJhxeOnqZTw1uAP74szYhz1TpOlGHV5Ot1bHMXcSHLidMQBFnqV1GKkm9vJjBBsCR_u_RASstcsE6j95eW1GEMqeoJqWF_flQo7TUOZ73sTDzqnjjqJUdGXJ22Sx2KpnLIoKm9A_YCl4I2IbOzusXHsF6pjKsvzQNMHVtisCJnFJKsyZkFRjcGWCHyLH-'},
+        {w: 'కలప', l: ['క', 'ల', 'ప'], img: 'https://blogger.googleusercontent.com/img/a/AVvXsEhAJhxeOnqZTw1uAP74szYhz1TpOlGHV5Ot1bHMXcSHLidMQBFnqV1GKkm9vJjBBsCR_u_RASstcsE6j95eW1GEMqeoJqWF_flQo7TUOZ73sTDzqnjjqJUdGXJ22Sx2KpnLIoKm9A_YCl4I2IbOzusXHsF6pjKsvzQNMHVtisCJnFJKsyZkFRjcGWCHyLH-'}
     ];
 
     /* ==========================================
-       GAME ENGINE LOGIC (Standardized)
+       GAME ENGINE LOGIC 
        ========================================== */
     let totalAttempts = 0;
     let activeBlank = null;
@@ -116,25 +116,26 @@
         });
     };
 
-    // ఇక్కడే మ్యాజిక్ జరిగింది! కోడ్ క్రాష్ అవ్వకుండా సేఫ్టీ లాజిక్ యాడ్ చేశాను.
+    // కొత్త ఆడియో ట్రిక్ - యాప్ కోసం ప్రత్యేకంగా!
     function speak(txt) {
         try {
-            if (window.speechSynthesis) {
-                window.speechSynthesis.cancel();
-                setTimeout(() => {
-                    try {
-                        const u = new SpeechSynthesisUtterance(txt);
-                        u.lang = 'te-IN'; u.rate = 0.7;
-                        window.speechSynthesis.speak(u);
-                    } catch(e) { console.log("Audio block prevented crash", e); }
-                }, 50);
-            }
-        } catch (error) {
-            console.log("Audio not supported in this view.", error);
+            let audioUrl = "https://translate.google.com/translate_tts?ie=UTF-8&tl=te&client=tw-ob&q=" + encodeURIComponent(txt);
+            let audio = new Audio(audioUrl);
+            
+            audio.play().catch(function(err) {
+                if (window.speechSynthesis) {
+                    window.speechSynthesis.cancel();
+                    let u = new SpeechSynthesisUtterance(txt);
+                    u.lang = 'te-IN'; 
+                    u.rate = 0.7;
+                    window.speechSynthesis.speak(u);
+                }
+            });
+        } catch (e) {
+            console.log("Audio Error", e);
         }
     }
 
-    // ఆ స్పీకర్ బొమ్మ నొక్కితే సౌండ్ రావడానికి ఈ చిన్న ఫంక్షన్ యాడ్ చేశాను.
     function replayAudio() {
         if (qIdx < targetSet.length) {
             speak(targetSet[qIdx]);
@@ -236,107 +237,15 @@
         document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
         document.getElementById('finish').classList.add('active');
         
-        // Calculate the stars
         let rating = (totalAttempts <= 30) ? 5 : (totalAttempts <= 35) ? 4 : (totalAttempts <= 40) ? 3 : (totalAttempts <= 45) ? 2 : 1;
         let msgs = ["", "Try Again!", "Keep Practicing!", "Good Effort!", "Great Job!", "Perfect Mastery!"];
         let stars = "";
         for (let i = 1; i <= 5; i++) stars += (i <= rating) ? '<span class="star-filled">\u2605</span>' : '<span class="star-empty">\u2606</span>';
         
-        // Display the feedback to the student
         document.getElementById('star-display').innerHTML = stars;
         document.getElementById('final-eval-text').innerText = msgs[rating];
 
-       // Changed window.parent to window.top
-window.top.postMessage({ type: "autoSaveScore", stars: rating }, "*");
-    }
-</script>
-</body>
-</html>
-        [...CONFIG.stage2Letters].sort(() => Math.random() - 0.5).forEach(l => {
-            const t = document.createElement('div');
-            t.className = 'tile'; t.innerText = l;
-            t.onclick = () => {
-                totalAttempts++;
-                if(l === target) { qIdx++; loadId(); }
-                else { speak(target); }
-            };
-            grid.appendChild(t);
-        });
-    }
-
-    function loadScramble() {
-        if(wordIdx >= wordData.length) {
-            document.getElementById('stage3-feedback').style.display = 'block';
-            return;
-        }
-        const d = wordData[wordIdx];
-        document.getElementById('image-container').innerHTML = `<img src="${d.img}" class="word-img" alt="${d.w}">`;
-        const area = document.getElementById('drop-area'); area.innerHTML = '';
-        d.l.forEach(() => {
-            const z = document.createElement('div');
-            z.className = 'drop-zone';
-            z.onclick = function() { this.innerText = ""; };
-            area.appendChild(z);
-        });
-        const grid = document.getElementById('scrambled-letters'); grid.innerHTML = '';
-        [...d.l].sort(() => Math.random() - 0.5).forEach(l => {
-            const t = document.createElement('div');
-            t.className = 'tile'; t.innerText = l;
-            t.onclick = () => {
-                totalAttempts++;
-                const zones = document.querySelectorAll('#drop-area .drop-zone');
-                for(let z of zones) { if(!z.innerText) { z.innerText = l; break; } }
-                let current = "";
-                zones.forEach(z => current += z.innerText);
-                if(current === d.w) { wordIdx++; setTimeout(loadScramble, 800); }
-            };
-            grid.appendChild(t);
-        });
-    }
-
-    function selectBlank(n) {
-        activeBlank = n;
-        document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('selected-blank'));
-        document.getElementById('b'+n).classList.add('selected-blank');
-    }
-
-    function fillSelected(l) {
-        if(activeBlank) {
-            totalAttempts++;
-            document.getElementById('b'+activeBlank).innerText = l;
-            document.getElementById('b'+activeBlank).classList.remove('wrong');
-        }
-    }
-
-    function checkStage4() {
-        let allCorrect = true;
-        for(let k in CONFIG.stage4Answers) {
-            const el = document.getElementById(k);
-            if(el.innerText === CONFIG.stage4Answers[k]) el.className = 'drop-zone correct';
-            else { el.className = 'drop-zone wrong'; allCorrect = false; }
-        }
-        if(allCorrect) {
-            document.getElementById('check-btn').style.display = 'none';
-            document.getElementById('final-btn').style.display = 'inline-block';
-        }
-    }
-
-    function showFinalScore() {
-        document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
-        document.getElementById('finish').classList.add('active');
-        
-        // Calculate the stars
-        let rating = (totalAttempts <= 30) ? 5 : (totalAttempts <= 35) ? 4 : (totalAttempts <= 40) ? 3 : (totalAttempts <= 45) ? 2 : 1;
-        let msgs = ["", "Try Again!", "Keep Practicing!", "Good Effort!", "Great Job!", "Perfect Mastery!"];
-        let stars = "";
-        for (let i = 1; i <= 5; i++) stars += (i <= rating) ? '<span class="star-filled">\u2605</span>' : '<span class="star-empty">\u2606</span>';
-        
-        // Display the feedback to the student
-        document.getElementById('star-display').innerHTML = stars;
-        document.getElementById('final-eval-text').innerText = msgs[rating];
-
-       // Changed window.parent to window.top
-window.top.postMessage({ type: "autoSaveScore", stars: rating }, "*");
+        window.top.postMessage({ type: "autoSaveScore", stars: rating }, "*");
     }
 </script>
 </body>
