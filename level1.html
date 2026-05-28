@@ -116,29 +116,35 @@
         });
     };
 
-    // కొత్త ఆడియో ట్రిక్ - యాప్ కోసం ప్రత్యేకంగా!
+    // అత్యంత పవర్‌ఫుల్ ఆడియో ఫంక్షన్ (యాప్స్ కోసం ప్రత్యేకంగా)
     function speak(txt) {
         try {
-            let audioUrl = "https://translate.google.com/translate_tts?ie=UTF-8&tl=te&client=tw-ob&q=" + encodeURIComponent(txt);
+            // గూగుల్ డెవలపర్ ఆడియో లింక్ (దీన్ని బ్రౌజర్లు బ్లాక్ చేయలేవు)
+            let audioUrl = "https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=te&q=" + encodeURIComponent(txt);
             let audio = new Audio(audioUrl);
             
-            audio.play().catch(function(err) {
-                if (window.speechSynthesis) {
-                    window.speechSynthesis.cancel();
-                    let u = new SpeechSynthesisUtterance(txt);
-                    u.lang = 'te-IN'; 
-                    u.rate = 0.7;
-                    window.speechSynthesis.speak(u);
-                }
-            });
+            let playPromise = audio.play();
+            
+            // ఒకవేళ ఇంటర్నెట్ స్లో ఉండి ఈ ఆడియో ప్లే అవ్వకపోతే, ఫోన్ సిస్టమ్ వాయిస్‌ని వాడుతుంది
+            if (playPromise !== undefined) {
+                playPromise.catch(function(error) {
+                    console.log("Audio URL blocked, falling back to native TTS", error);
+                    playNativeVoice(txt);
+                });
+            }
         } catch (e) {
-            console.log("Audio Error", e);
+            playNativeVoice(txt);
         }
     }
 
-    function replayAudio() {
-        if (qIdx < targetSet.length) {
-            speak(targetSet[qIdx]);
+    // బ్యాకప్ వాయిస్ ఫంక్షన్
+    function playNativeVoice(txt) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            let u = new SpeechSynthesisUtterance(txt);
+            u.lang = 'te-IN'; 
+            u.rate = 0.8;
+            window.speechSynthesis.speak(u);
         }
     }
 
