@@ -1,7 +1,8 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"></meta>
-<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"></meta>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
 <title>FLN Telugu Mastery: పాఠాలు, పద్యాలు & వ్యాకరణం</title>
 <style>
   /* బయట బ్యాక్ గ్రౌండ్ (స్కై బ్లూ & పర్పుల్) */
@@ -234,9 +235,9 @@
       <button class="btn-logout" onclick="logoutStudent()">Close Report</button>
     </div>
     <div class="admin-summary">
-      <!-- Changed text to Bilingual -->
-      <div class="summary-box">👥 విద్యార్థులు (Students): <span id="count-students" style="color: #d35400;">0</span></div>
-      <div class="summary-box">🏫 పాఠశాలలు (Schools): <span id="count-schools" style="color: #2980b9;">0</span></div>
+      <!-- Bilingual Telugu & English Summary Box Labels -->
+      <div class="summary-box">👥 విద్యార్థులు (Students): <span id="count-students" style="color: #d35400;">15000</span></div>
+      <div class="summary-box">🏫 పాఠశాలలు (Schools): <span id="count-schools" style="color: #2980b9;">2200</span></div>
     </div>
     <div class="admin-actions">
       <button class="btn-action btn-export" onclick="exportToCSV()">📥 Export (Google Sheets)</button>
@@ -270,10 +271,13 @@
     <button class="btn-logout" onclick="closeCertificate()">Close</button>
   </div>
 </div>
-  <script type="module">
+
+<script type="module">
   // ==========================================
-  // MASTER SETTINGS (Change Grammar levels here in future!)
+  // MASTER SETTINGS
   const MAX_GRAMMAR_LEVELS = 5;
+  const BASE_STUDENT_COUNT = 15000;
+  const BASE_SCHOOL_COUNT = 2200;
   // ==========================================
   document.getElementById("grammar-level-count").innerText = MAX_GRAMMAR_LEVELS;
 
@@ -297,19 +301,19 @@
     let returnBtn = document.getElementById("finish-return-btn");
 
     if (event.data.type === "autoSaveScore") {
-      returnBtn.className = "close-btn blink-btn"; let earnedStars = event.data.stars; if(playingLevel === 0) return; studentStars[playingLevel] = earnedStars;
+      returnBtn.className = "close-btn blink-btn"; let earnedStars = Number(event.data.stars) || 0; if(playingLevel === 0) return; studentStars[playingLevel] = earnedStars;
       if (playingLevel <= 20) { if (playingLevel === highestUnlockedLevel && highestUnlockedLevel <= 20) { highestUnlockedLevel++; } } 
       else if (playingLevel >= 21 && playingLevel <= 26) { if (playingLevel === highestUnlockedLevelStage2 && highestUnlockedLevelStage2 <= 26) { highestUnlockedLevelStage2++; } } 
       else if (playingLevel >= 27 && playingLevel <= 44) { if (playingLevel === highestUnlockedLevelStage3 && highestUnlockedLevelStage3 <= 44) { highestUnlockedLevelStage3++; } }
       const studentDocRef = doc(db, "students", currentDocId); await setDoc(studentDocRef, { unlockedLevel: highestUnlockedLevel, unlockedLevelStage2: highestUnlockedLevelStage2, unlockedLevelStage3: highestUnlockedLevelStage3, stars: studentStars, lastPlayed: new Date() }, { merge: true }); generateMap(); 
     }
     if (event.data.type === "autoSavePoemScore") {
-      returnBtn.className = "close-btn blink-btn"; let earnedStars = event.data.stars; if(playingLevel === 0) return; poemStars[playingLevel] = earnedStars;
+      returnBtn.className = "close-btn blink-btn"; let earnedStars = Number(event.data.stars) || 0; if(playingLevel === 0) return; poemStars[playingLevel] = earnedStars;
       if (playingLevel === poemUnlockedLevel && poemUnlockedLevel <= 22) { poemUnlockedLevel++; }
       const studentDocRef = doc(db, "students", currentDocId); await setDoc(studentDocRef, { poemUnlockedLevel: poemUnlockedLevel, poemStars: poemStars, lastPlayedPoems: new Date() }, { merge: true }); generateMap();
     }
     if (event.data.type === "autoSaveGrammarScore") {
-      returnBtn.className = "close-btn blink-btn"; let earnedStars = event.data.stars; if(playingLevel === 0) return; grammarStars[playingLevel] = earnedStars;
+      returnBtn.className = "close-btn blink-btn"; let earnedStars = Number(event.data.stars) || 0; if(playingLevel === 0) return; grammarStars[playingLevel] = earnedStars;
       if (playingLevel === grammarUnlockedLevel && grammarUnlockedLevel <= MAX_GRAMMAR_LEVELS) { grammarUnlockedLevel++; }
       const studentDocRef = doc(db, "students", currentDocId); await setDoc(studentDocRef, { grammarUnlockedLevel: grammarUnlockedLevel, grammarStars: grammarStars, lastPlayedGrammar: new Date() }, { merge: true }); generateMap();
     }
@@ -388,7 +392,7 @@
         document.getElementById("stage-title").innerHTML = "వ్యాకరణం (Grammar)"; activeStarsObj = grammarStars;
     }
 
-    let totalStarsCalc = 0; for (let i = startIdx; i <= endIdx; i++) { if (activeStarsObj[i]) totalStarsCalc += activeStarsObj[i]; }
+    let totalStarsCalc = 0; for (let i = startIdx; i <= endIdx; i++) { if (activeStarsObj[i]) totalStarsCalc += Number(activeStarsObj[i]) || 0; }
     document.getElementById("display-total-stars").innerHTML = totalStarsCalc + " / " + maxStars;
 
     for (let i = startIdx; i <= endIdx; i++) {
@@ -413,9 +417,9 @@
       const querySnapshot = await getDocs(collection(db, "students")); adminDataCache = []; let uniqueSchools = new Set();
       querySnapshot.forEach((doc) => {
         const data = doc.data(); 
-        let tStars = 0; if(data.stars) { for (let l in data.stars) { tStars += data.stars[l]; } }
-        let pStars = 0; if(data.poemStars) { for (let l in data.poemStars) { pStars += data.poemStars[l]; } }
-        let gStars = 0; if(data.grammarStars) { for (let l in data.grammarStars) { gStars += data.grammarStars[l]; } }
+        let tStars = 0; if(data.stars) { for (let l in data.stars) { tStars += Number(data.stars[l]) || 0; } }
+        let pStars = 0; if(data.poemStars) { for (let l in data.poemStars) { pStars += Number(data.poemStars[l]) || 0; } }
+        let gStars = 0; if(data.grammarStars) { for (let l in data.grammarStars) { gStars += Number(data.grammarStars[l]) || 0; } }
         
         let lPlayed = data.stars ? Object.keys(data.stars).length : 0;
         let pPlayed = data.poemStars ? Object.keys(data.poemStars).length : 0;
@@ -434,25 +438,25 @@
     const schoolFilterVal = document.getElementById("filter-school").value; const tbody = document.getElementById("admin-table-body"); tbody.innerHTML = ""; 
     let filteredData = adminDataCache.filter(data => { if (schoolFilterVal !== "ALL" && data.schoolName !== schoolFilterVal) return false; return true; });
     
-    // Sort logic: Top level scorers, followed by more levels completed
+    // Sort logic: Students with MORE TOTAL STARS appear FIRST (descending order)
     filteredData.sort((a, b) => {
-        let totalStarsA = a.tStars + a.pStars + a.gStars;
-        let totalStarsB = b.tStars + b.pStars + b.gStars;
+        let totalStarsA = Number(a.tStars) + Number(a.pStars) + Number(a.gStars);
+        let totalStarsB = Number(b.tStars) + Number(b.pStars) + Number(b.gStars);
         
         if (totalStarsA !== totalStarsB) {
-            return totalStarsB - totalStarsA;
+            return totalStarsB - totalStarsA; // Descending order by stars
         } else {
-            let totalLevelsA = a.lPlayed + a.pPlayed + a.gPlayed;
-            let totalLevelsB = b.lPlayed + b.pPlayed + b.gPlayed;
-            return totalLevelsB - totalLevelsA;
+            let totalLevelsA = Number(a.lPlayed) + Number(a.pPlayed) + Number(a.gPlayed);
+            let totalLevelsB = Number(b.lPlayed) + Number(b.pPlayed) + Number(b.gPlayed);
+            return totalLevelsB - totalLevelsA; // Secondary sort by levels played
         }
     });
 
     let uniqueFilteredSchools = new Set(); filteredData.forEach(d => { if(d.schoolName) uniqueFilteredSchools.add(d.schoolName); });
     
-    // Adding standard base counts as requested
-    document.getElementById("count-students").innerText = 15200 + filteredData.length; 
-    document.getElementById("count-schools").innerText = 2200 + uniqueFilteredSchools.size;
+    // Starting base counts: 15,000 for students and 2,200 for schools
+    document.getElementById("count-students").innerText = BASE_STUDENT_COUNT + filteredData.length; 
+    document.getElementById("count-schools").innerText = BASE_SCHOOL_COUNT + uniqueFilteredSchools.size;
 
     filteredData.forEach(data => {
       const tr = document.createElement("tr"); let checkboxHTML = isSelectionMode ? `<input type="checkbox" class="student-checkbox" onchange="toggleStudentSelection(this, '${data.id}')" ${selectedStudentIds.has(data.id) ? 'checked' : ''}>` : '';
@@ -465,6 +469,14 @@
     csvContent += "Student Name,School Name,Telugu Played (44),Telugu Stars,Poems Played (22),Poem Stars,Grammar Played,Grammar Stars\n";
     const schoolFilterVal = document.getElementById("filter-school").value;
     let filteredData = adminDataCache.filter(data => { if (schoolFilterVal !== "ALL" && data.schoolName !== schoolFilterVal) return false; return true; });
+    
+    // Sort exported CSV in descending order of stars as well
+    filteredData.sort((a, b) => {
+        let totalStarsA = Number(a.tStars) + Number(a.pStars) + Number(a.gStars);
+        let totalStarsB = Number(b.tStars) + Number(b.pStars) + Number(b.gStars);
+        return totalStarsB - totalStarsA;
+    });
+
     filteredData.forEach(function(r) { let row = `"${r.studentName}","${r.schoolName}",${r.lPlayed},${r.tStars},${r.pPlayed},${r.pStars},${r.gPlayed},${r.gStars}`; csvContent += row + "\n"; });
     var encodedUri = encodeURI(csvContent); var link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "FLN_Telugu_MegaHub_Report.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
   }
@@ -501,9 +513,9 @@
         if (currentStageView === 1) { startIdx = 1; endIdx = 20; maxStars = 100; stageTitle = "Stage 1: సరళ పదాలు (Levels 1-20)"; } 
         else if (currentStageView === 2) { startIdx = 21; endIdx = 26; maxStars = 30; stageTitle = "Stage 2: గుణింత పదాలు (Levels 21-26)"; } 
         else if (currentStageView === 3) { startIdx = 27; endIdx = 44; maxStars = 90; stageTitle = "Stage 3: ద్విత్వాక్షర పదాలు (Levels 27-44)"; }
-        for (let i = startIdx; i <= endIdx; i++) { if (studentStars[i]) totalStars += studentStars[i]; }
-    } else if (currentMainTab === 'poems') { maxStars = 110; stageTitle = "తెలుగు పద్యాలు (Poems 1-22)"; for (let i = 1; i <= 22; i++) { if (poemStars[i]) totalStars += poemStars[i]; } 
-    } else { maxStars = MAX_GRAMMAR_LEVELS * 5; stageTitle = "తెలుగు వ్యాకరణం (Grammar)"; for (let i = 1; i <= MAX_GRAMMAR_LEVELS; i++) { if (grammarStars[i]) totalStars += grammarStars[i]; } }
+        for (let i = startIdx; i <= endIdx; i++) { if (studentStars[i]) totalStars += Number(studentStars[i]) || 0; }
+    } else if (currentMainTab === 'poems') { maxStars = 110; stageTitle = "తెలుగు పద్యాలు (Poems 1-22)"; for (let i = 1; i <= 22; i++) { if (poemStars[i]) totalStars += Number(poemStars[i]) || 0; } 
+    } else { maxStars = MAX_GRAMMAR_LEVELS * 5; stageTitle = "తెలుగు వ్యాకరణం (Grammar)"; for (let i = 1; i <= MAX_GRAMMAR_LEVELS; i++) { if (grammarStars[i]) totalStars += Number(grammarStars[i]) || 0; } }
     
     document.getElementById("cert-stage-text").innerHTML = stageTitle; document.getElementById("cert-display-score").innerHTML = totalStars + " / " + maxStars + " ⭐";
     let pct = (totalStars / maxStars) * 100; let feedback = "";
@@ -513,17 +525,16 @@
   window.closeCertificate = function() { document.getElementById("certificate-overlay").style.display = "none"; }
   function showLoading(show) { document.getElementById("loading").style.display = show ? "block" : "none"; }
 
-  // స్ప్లాష్ స్క్రీన్ టైమర్ (3 సెకన్లు)
+  // Splash Screen Fade Timer (3 Seconds)
   window.addEventListener('load', function() {
     setTimeout(function() {
       var splash = document.getElementById('splash-screen');
       if(splash) {
-        splash.style.opacity = '0'; // ముందు స్మూత్ గా ఫేడ్ అవుతుంది
-        setTimeout(function() { splash.style.display = 'none'; }, 500); // తర్వాత డిలీట్ అవుతుంది
+        splash.style.opacity = '0';
+        setTimeout(function() { splash.style.display = 'none'; }, 500);
       }
-    }, 6000); // 6000 అంటే 6 సెకన్లు
+    }, 3000);
   });
 </script>
 </body>
 </html>
- 
