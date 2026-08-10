@@ -235,7 +235,7 @@
       <button class="btn-logout" onclick="logoutStudent()">Close Report</button>
     </div>
     <div class="admin-summary">
-      <!-- Bilingual Telugu & English Summary Box Labels -->
+      <!-- Explicit Bilingual Labels with Base Counts 15000 & 2200 -->
       <div class="summary-box">👥 విద్యార్థులు (Students): <span id="count-students" style="color: #d35400;">15000</span></div>
       <div class="summary-box">🏫 పాఠశాలలు (Schools): <span id="count-schools" style="color: #2980b9;">2200</span></div>
     </div>
@@ -274,7 +274,7 @@
 
 <script type="module">
   // ==========================================
-  // MASTER SETTINGS
+  // MASTER CONSTANTS
   const MAX_GRAMMAR_LEVELS = 5;
   const BASE_STUDENT_COUNT = 15000;
   const BASE_SCHOOL_COUNT = 2200;
@@ -417,17 +417,66 @@
       const querySnapshot = await getDocs(collection(db, "students")); adminDataCache = []; let uniqueSchools = new Set();
       querySnapshot.forEach((doc) => {
         const data = doc.data(); 
-        let tStars = 0; if(data.stars) { for (let l in data.stars) { tStars += Number(data.stars[l]) || 0; } }
-        let pStars = 0; if(data.poemStars) { for (let l in data.poemStars) { pStars += Number(data.poemStars[l]) || 0; } }
-        let gStars = 0; if(data.grammarStars) { for (let l in data.grammarStars) { gStars += Number(data.grammarStars[l]) || 0; } }
         
-        let lPlayed = data.stars ? Object.keys(data.stars).length : 0;
-        let pPlayed = data.poemStars ? Object.keys(data.poemStars).length : 0;
-        let gPlayed = data.grammarStars ? Object.keys(data.grammarStars).length : 0;
+        let tStars = 0;
+        if(data.stars) {
+          if (typeof data.stars === 'number') tStars = data.stars;
+          else if (typeof data.stars === 'object') {
+            for (let l in data.stars) { tStars += Number(data.stars[l]) || 0; }
+          }
+        }
         
-        adminDataCache.push({ id: doc.id, studentName: data.studentName || 'Unknown', schoolName: data.schoolName || 'Unknown', lPlayed: lPlayed, tStars: tStars, pPlayed: pPlayed, pStars: pStars, gPlayed: gPlayed, gStars: gStars });
+        let pStars = 0;
+        if(data.poemStars) {
+          if (typeof data.poemStars === 'number') pStars = data.poemStars;
+          else if (typeof data.poemStars === 'object') {
+            for (let l in data.poemStars) { pStars += Number(data.poemStars[l]) || 0; }
+          }
+        }
+        
+        let gStars = 0;
+        if(data.grammarStars) {
+          if (typeof data.grammarStars === 'number') gStars = data.grammarStars;
+          else if (typeof data.grammarStars === 'object') {
+            for (let l in data.grammarStars) { gStars += Number(data.grammarStars[l]) || 0; }
+          }
+        }
+        
+        let lPlayed = 0;
+        if (data.stars) {
+          if (typeof data.stars === 'number') lPlayed = 1;
+          else if (typeof data.stars === 'object') lPlayed = Object.keys(data.stars).length;
+        }
+        let pPlayed = 0;
+        if (data.poemStars) {
+          if (typeof data.poemStars === 'number') pPlayed = 1;
+          else if (typeof data.poemStars === 'object') pPlayed = Object.keys(data.poemStars).length;
+        }
+        let gPlayed = 0;
+        if (data.grammarStars) {
+          if (typeof data.grammarStars === 'number') gPlayed = 1;
+          else if (typeof data.grammarStars === 'object') gPlayed = Object.keys(data.grammarStars).length;
+        }
+        
+        let totalStars = Number(tStars) + Number(pStars) + Number(gStars);
+        let totalPlayed = Number(lPlayed) + Number(pPlayed) + Number(gPlayed);
+
+        adminDataCache.push({
+          id: doc.id,
+          studentName: data.studentName || 'Unknown',
+          schoolName: data.schoolName || 'Unknown',
+          lPlayed: lPlayed,
+          tStars: Number(tStars) || 0,
+          pPlayed: pPlayed,
+          pStars: Number(pStars) || 0,
+          gPlayed: gPlayed,
+          gStars: Number(gStars) || 0,
+          totalStars: totalStars,
+          totalPlayed: totalPlayed
+        });
         if(data.schoolName) uniqueSchools.add(data.schoolName);
       });
+
       const schoolFilter = document.getElementById("filter-school"); schoolFilter.innerHTML = '<option value="ALL">All Schools</option>';
       uniqueSchools.forEach(school => { let opt = document.createElement("option"); opt.value = school; opt.innerHTML = school; schoolFilter.appendChild(opt); });
       isSelectionMode = false; selectedStudentIds.clear(); document.getElementById("btn-delete-bulk").style.display = "none"; document.getElementById("btn-select-mode").innerHTML = "☑️ Select Data"; document.getElementById("login-screen").style.display = "none"; document.getElementById("admin-screen").style.display = "block"; window.renderAdminTable(); 
@@ -438,23 +487,20 @@
     const schoolFilterVal = document.getElementById("filter-school").value; const tbody = document.getElementById("admin-table-body"); tbody.innerHTML = ""; 
     let filteredData = adminDataCache.filter(data => { if (schoolFilterVal !== "ALL" && data.schoolName !== schoolFilterVal) return false; return true; });
     
-    // Sort logic: Students with MORE TOTAL STARS appear FIRST (descending order)
+    // Strict Sorting by Total Stars Descending (highest star count on top)
     filteredData.sort((a, b) => {
-        let totalStarsA = Number(a.tStars) + Number(a.pStars) + Number(a.gStars);
-        let totalStarsB = Number(b.tStars) + Number(b.pStars) + Number(b.gStars);
-        
-        if (totalStarsA !== totalStarsB) {
-            return totalStarsB - totalStarsA; // Descending order by stars
-        } else {
-            let totalLevelsA = Number(a.lPlayed) + Number(a.pPlayed) + Number(a.gPlayed);
-            let totalLevelsB = Number(b.lPlayed) + Number(b.pPlayed) + Number(b.gPlayed);
-            return totalLevelsB - totalLevelsA; // Secondary sort by levels played
+        if (b.totalStars !== a.totalStars) {
+            return b.totalStars - a.totalStars;
         }
+        if (b.totalPlayed !== a.totalPlayed) {
+            return b.totalPlayed - a.totalPlayed;
+        }
+        return a.studentName.localeCompare(b.studentName);
     });
 
     let uniqueFilteredSchools = new Set(); filteredData.forEach(d => { if(d.schoolName) uniqueFilteredSchools.add(d.schoolName); });
     
-    // Starting base counts: 15,000 for students and 2,200 for schools
+    // Render Base Counts + Firestore record counts
     document.getElementById("count-students").innerText = BASE_STUDENT_COUNT + filteredData.length; 
     document.getElementById("count-schools").innerText = BASE_SCHOOL_COUNT + uniqueFilteredSchools.size;
 
@@ -470,12 +516,8 @@
     const schoolFilterVal = document.getElementById("filter-school").value;
     let filteredData = adminDataCache.filter(data => { if (schoolFilterVal !== "ALL" && data.schoolName !== schoolFilterVal) return false; return true; });
     
-    // Sort exported CSV in descending order of stars as well
-    filteredData.sort((a, b) => {
-        let totalStarsA = Number(a.tStars) + Number(a.pStars) + Number(a.gStars);
-        let totalStarsB = Number(b.tStars) + Number(b.pStars) + Number(b.gStars);
-        return totalStarsB - totalStarsA;
-    });
+    // Match CSV export sorting with report table sorting
+    filteredData.sort((a, b) => b.totalStars - a.totalStars);
 
     filteredData.forEach(function(r) { let row = `"${r.studentName}","${r.schoolName}",${r.lPlayed},${r.tStars},${r.pPlayed},${r.pStars},${r.gPlayed},${r.gStars}`; csvContent += row + "\n"; });
     var encodedUri = encodeURI(csvContent); var link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "FLN_Telugu_MegaHub_Report.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
@@ -525,7 +567,7 @@
   window.closeCertificate = function() { document.getElementById("certificate-overlay").style.display = "none"; }
   function showLoading(show) { document.getElementById("loading").style.display = show ? "block" : "none"; }
 
-  // Splash Screen Fade Timer (3 Seconds)
+  // Splash Screen Timer
   window.addEventListener('load', function() {
     setTimeout(function() {
       var splash = document.getElementById('splash-screen');
